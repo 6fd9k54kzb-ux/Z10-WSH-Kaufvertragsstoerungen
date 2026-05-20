@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mängelrüge schreiben - Schülerdatei</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --blue: #1a3a8f;
+    --blue-dark: #10256a;
+    --blue-light: #eaf0ff;
+    --yellow: #fff9e0;
+    --yellow-border: #e0c000;
+    --red: #cc0000;
+    --red-light: #fff0f0;
+    --green: #1a9e5c;
+    --green-light: #e8f9f1;
+    --orange: #e07b00;
+    --orange-light: #fff4e0;
+    --text: #1a1a1a;
+    --muted: #666;
+    --border: #c8d0e8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', Arial, sans-serif;
+    background: #f3f5fb;
+    color: var(--text);
+    font-size: 10.5pt;
+    line-height: 1.45;
+  }
+
+  .page {
+    max-width: 210mm;
+    margin: 0 auto;
+    background: white;
+    min-height: 297mm;
+    padding: 16mm 18mm;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.12);
+  }
+
+  .no-print.toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #111827;
+    color: white;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+
+  .tool-btn {
+    border: 0;
+    border-radius: 7px;
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 9pt;
+    font-weight: 700;
+    cursor: pointer;
+    background: white;
+    color: #111827;
+  }
+  .tool-btn.primary { background: #dbeafe; color: #0f2060; }
+  .tool-btn.success { background: #dcfce7; color: #14532d; }
+  .tool-btn.danger { background: #fee2e2; color: #991b1b; }
+  .tool-hint { font-size: 8.5pt; opacity: 0.8; align-self: center; }
+
+  @media print {
+    body { background: white; }
+    .page { box-shadow: none; padding: 13mm 15mm; max-width: none; min-height: auto; }
+    .no-print { display: none !important; }
+    textarea, input { border-color: #888 !important; }
+    .editable { background: white !important; }
+    .check-feedback { display: none; }
+  }
+
+  .sheet-header {
+    border-bottom: 3px solid var(--blue);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  .sheet-title { font-size: 17pt; font-weight: 900; color: var(--blue); }
+  .sheet-sub { font-size: 9pt; color: #555; margin-top: 2px; }
+  .sheet-meta { font-size: 8.5pt; color: var(--muted); text-align: right; line-height: 1.7; min-width: 56mm; }
+  .meta-input {
+    border: none;
+    border-bottom: 1px solid #aaa;
+    font-family: inherit;
+    font-size: 8.5pt;
+    width: 35mm;
+    padding: 1px 2px;
+    background: transparent;
+  }
+
+  .section-label {
+    font-size: 8pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #444;
+    margin: 13px 0 6px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 3px;
+  }
+
+  .hinweis {
+    background: var(--yellow);
+    border: 1px solid var(--yellow-border);
+    border-radius: 5px;
+    padding: 8px 10px;
+    font-size: 9pt;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .hinweis strong { color: #7a5800; }
+
+  .case-box {
+    background: var(--blue-light);
+    border: 2px solid var(--blue);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 11px;
+  }
+  .case-title {
+    font-size: 8pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--blue);
+    margin-bottom: 5px;
+  }
+  .case-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 9pt;
+  }
+  .case-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 7px 8px;
+  }
+  .case-card strong { color: var(--blue); }
+
+  .aufgabe {
+    margin-bottom: 12px;
+    border-left: 4px solid var(--blue);
+    padding-left: 11px;
+  }
+  .aufgabe-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .nr-badge {
+    background: var(--blue);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10pt;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .aufgabe-title {
+    font-size: 10.5pt;
+    font-weight: 800;
+    color: var(--blue);
+    line-height: 1.3;
+    flex: 1;
+  }
+  .aufgabe-hint {
+    font-size: 8.7pt;
+    color: #555;
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 99px;
+    padding: 2px 7px;
+    font-size: 7.5pt;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+  .badge.r { background: var(--green-light); color: #0a5030; }
+  .badge.rplus { background: var(--orange-light); color: #6b3800; }
+  .badge.e { background: var(--blue-light); color: #0a2060; }
+
+  .check-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px 10px;
+    margin-bottom: 8px;
+  }
+  .check-item {
+    background: #fbfcff;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 6px 7px;
+    display: flex;
+    gap: 7px;
+    align-items: flex-start;
+    font-size: 9pt;
+    transition: background-color .18s, border-color .18s, color .18s;
+  }
+  .check-item input { margin-top: 2px; transform: scale(1.05); }
+  .check-item.correct-selected {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: #0a5030;
+    font-weight: 700;
+  }
+  .check-item.wrong-selected {
+    background: var(--red-light);
+    border-color: var(--red);
+    color: #7f1d1d;
+    font-weight: 700;
+  }
+  .check-feedback {
+    font-size: 8.5pt;
+    border-radius: 5px;
+    padding: 6px 8px;
+    background: #f8fafc;
+    border: 1px dashed #94a3b8;
+    color: #334155;
+  }
+  .check-feedback strong.green { color: var(--green); }
+  .check-feedback strong.red { color: var(--red); }
+
+  .wordbank-wrap {
+    background: #f8fafc;
+    border: 1px solid #dbe3f2;
+    border-radius: 6px;
+    padding: 8px 9px;
+    margin: 8px 0 9px;
+  }
+  .wordbank-title {
+    font-size: 8pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #475569;
+    margin-bottom: 6px;
+  }
+  .wordbank {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .word {
+    background: #eef2ff;
+    color: var(--blue);
+    border: 1px solid #c7d2fe;
+    border-radius: 20px;
+    padding: 3px 8px;
+    font-size: 8.5pt;
+    font-weight: 700;
+    transition: all .18s;
+  }
+  .word.used {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: #0a5030;
+  }
+  .word.used::before { content: "✓ "; }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .field {
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 8px;
+    background: #fbfcff;
+  }
+  .field.full { grid-column: 1 / -1; }
+  .field label {
+    display: block;
+    font-size: 8pt;
+    font-weight: 800;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  input[type="text"], textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 10pt;
+    border: 1px solid #b9c3df;
+    border-radius: 5px;
+    padding: 6px 7px;
+    background: #fffde8;
+    color: #111;
+  }
+  textarea {
+    min-height: 62px;
+    resize: vertical;
+    line-height: 1.4;
+  }
+  textarea.short { min-height: 44px; }
+  textarea.long { min-height: 150px; }
+  textarea:focus, input:focus { outline: 2px solid #a7bfff; border-color: var(--blue); }
+
+  .letter-box {
+    border: 2px solid var(--blue);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 7px;
+  }
+  .letter-top {
+    background: var(--blue);
+    color: white;
+    padding: 7px 10px;
+    font-size: 10pt;
+    font-weight: 800;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .letter-body { padding: 10px; background: white; }
+  .letter-row {
+    display: grid;
+    grid-template-columns: 36mm 1fr;
+    gap: 7px;
+    align-items: start;
+    margin-bottom: 8px;
+  }
+  .letter-row .label {
+    font-size: 8pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #555;
+    padding-top: 7px;
+  }
+  .action-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 8px 0;
+  }
+  .inline-btn {
+    border: 0;
+    border-radius: 7px;
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 9pt;
+    font-weight: 800;
+    cursor: pointer;
+    background: var(--blue);
+    color: white;
+  }
+  .inline-btn.secondary { background: #0f766e; }
+  .status-msg { font-size: 8.5pt; color: #475569; }
+
+  .quality-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .quality-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fbfcff;
+    padding: 8px 9px;
+    font-size: 8.8pt;
+  }
+  .quality-card h4 { color: var(--blue); font-size: 9.5pt; margin-bottom: 4px; }
+  .quality-card ul { margin-left: 1.1em; }
+  .quality-card li { margin-bottom: 2px; }
+
+  .footer-line {
+    border-top: 1px solid #ccc;
+    margin-top: 14px;
+    padding-top: 5px;
+    font-size: 8pt;
+    color: #777;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .teacher-note {
+    background: #f8fafc;
+    border: 1px dashed #94a3b8;
+    border-radius: 6px;
+    padding: 7px 9px;
+    font-size: 8.5pt;
+    color: #334155;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 760px) {
+    .page { padding: 14px; min-height: auto; }
+    .sheet-header { align-items: flex-start; flex-direction: column; }
+    .sheet-meta { text-align: left; min-width: unset; }
+    .case-grid, .field-grid, .check-grid, .quality-box { grid-template-columns: 1fr; }
+    .letter-row { grid-template-columns: 1fr; gap: 3px; }
+    .letter-row .label { padding-top: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="no-print toolbar">
+  <button class="tool-btn primary" onclick="combineBlocks()">🧩 Alle Einzelbausteine zusammenfügen</button>
+  <button class="tool-btn success" onclick="copyFinalText()">📋 Endfassung kopieren</button>
+  <button class="tool-btn" onclick="window.print()">🖨️ Drucken / als PDF speichern</button>
+  <button class="tool-btn danger" onclick="resetForm()">🗑️ Eingaben löschen</button>
+  <span class="tool-hint">Die Eingaben bleiben nur lokal in diesem Browser gespeichert.</span>
+</div>
+
+<div class="page">
+  <div class="sheet-header">
+    <div>
+      <div class="sheet-title">✉️ Mängelrüge schreiben</div>
+      <div class="sheet-sub">Thema: Mangelhafte Lieferung · Bürobedarf Schulz GmbH / OfficeLine GmbH · ÖB Klasse Z10</div>
+    </div>
+    <div class="sheet-meta">
+      Name: <input class="meta-input save" data-key="name" type="text"><br>
+      Klasse: <input class="meta-input save" data-key="klasse" type="text" style="width:18mm;">
+    </div>
+  </div>
+
+  <div class="case-box">
+    <div class="case-title">📋 Kurzfall - darauf bezieht sich deine Mängelrüge</div>
+    <div class="case-grid">
+      <div class="case-card"><strong>Bestellt:</strong> 50 Bürostühle „ErgoPro 500“, schwarz, höhenverstellbare Armlehnen, Lordosenstütze, 80,00 € pro Stück.</div>
+      <div class="case-card"><strong>Geliefert:</strong> 48 Bürostühle „ErgoPro 400“, grau, feste Armlehnen, ohne Lordosenstütze, 75,00 € pro Stück.</div>
+      <div class="case-card"><strong>Belege:</strong> Bestellung B-2025-047 vom 05.05.2025, Auftragsbestätigung AB-2025-1138 vom 07.05.2025, Lieferschein LS-8812.</div>
+      <div class="case-card"><strong>Wareneingang:</strong> Lieferung am 15.05.2025 um 09:45 Uhr geprüft. Die Rüge muss unverzüglich erfolgen.</div>
+    </div>
+  </div>
+
+  <div class="hinweis">
+    <strong>Arbeitsauftrag:</strong> Schreibe eine sachliche und vollständige Mängelrüge an die OfficeLine GmbH. Nutze die Angaben aus dem Fall. Ziel ist, dass der Lieferant genau erkennt, was falsch geliefert wurde und was die Bürobedarf Schulz GmbH verlangt.
+  </div>
+
+  <div class="section-label">Schritt 1 - Inhalt planen</div>
+  <div class="aufgabe">
+    <div class="aufgabe-head">
+      <div class="nr-badge">1</div>
+      <div class="aufgabe-title">Kreuze an, welche Bestandteile deine Mängelrüge enthalten muss.</div>
+      <span class="badge r">R</span>
+    </div>
+    <div class="aufgabe-hint">Sobald du ein Feld anklickst, bekommst du direkt Rückmeldung: Grün = richtig, Rot = gehört nicht in eine sachliche Mängelrüge.</div>
+
+    <div class="check-grid">
+      <label class="check-item"><input class="save check-answer" data-key="chk_absender" data-correct="true" type="checkbox"> Absender und Empfänger mit Firmenname</label>
+      <label class="check-item"><input class="save check-answer" data-key="chk_betreff" data-correct="true" type="checkbox"> Aussagekräftiger Betreff mit Bestellnummer / Lieferscheinnummer</label>
+      <label class="check-item"><input class="save check-answer" data-key="chk_bezug" data-correct="true" type="checkbox"> Bezug auf Bestellung, Auftragsbestätigung und Lieferung</label>
+      <label class="check-item"><input class="save check-answer" data-key="chk_mangel" data-correct="true" type="checkbox"> Genaue Beschreibung der Mängel / Abweichungen</label>
+      <label class="check-item"><input class="save check-answer" data-key="chk_recht" data-correct="true" type="checkbox"> Hinweis auf Sachmangel und unverzügliche Rüge nach Wareneingang</label>
+      <label class="check-item"><input class="save check-answer" data-key="chk_forderung" data-correct="true" type="checkbox"> Klare Forderung: Nacherfüllung / Ersatzlieferung / Nachlieferung</label>
+      <label class="check-item"><input class="save check-answer" data-key="chk_frist" data-correct="true" type="checkbox"> Angemessene Frist für Rückmeldung oder Nacherfüllung</label>
+      <label class="check-item"><input class="save check-answer" data-key="chk_ton" data-correct="true" type="checkbox"> Höflicher, sachlicher Geschäftston</label>
+      <label class="check-item"><input class="save check-answer" data-key="chk_meinung" data-correct="false" type="checkbox"> Private Meinung über die Qualität der Stühle</label>
+      <label class="check-item"><input class="save check-answer" data-key="chk_drohung" data-correct="false" type="checkbox"> Drohung mit sofortiger Strafanzeige</label>
+      <label class="check-item"><input class="save check-answer" data-key="chk_rabatt" data-correct="false" type="checkbox"> Preisnachlass verlangen, ohne die falsche Ware genau zu rügen</label>
+      <label class="check-item"><input class="save check-answer" data-key="chk_unklar" data-correct="false" type="checkbox"> Unklare Aussage: „Mit der Lieferung stimmt etwas nicht.“</label>
+    </div>
+    <div class="check-feedback" id="checkFeedback">Noch keine Auswahl getroffen.</div>
+  </div>
+
+  <div class="section-label">Schritt 2 - Bausteine formulieren</div>
+  <div class="aufgabe">
+    <div class="aufgabe-head">
+      <div class="nr-badge">2</div>
+      <div class="aufgabe-title">Fülle die Bausteine aus. Daraus entsteht anschließend deine Mängelrüge.</div>
+      <span class="badge rplus">R+</span>
+    </div>
+    <div class="aufgabe-hint">Formuliere in ganzen Sätzen. Die Fachbegriffe werden automatisch grün, sobald du sie in deinen Formulierungen verwendest.</div>
+
+    <div class="wordbank-wrap">
+      <div class="wordbank-title">Fachbegriffe - nutze sie passend in deinen Bausteinen</div>
+      <div class="wordbank" id="wordbank">
+        <span class="word" data-term="maengelruege" data-pattern="mängelrüge|maengelruege">Mängelrüge</span>
+        <span class="word" data-term="sachmangel" data-pattern="sachmangel|sachmängel|sachmaengel">Sachmangel</span>
+        <span class="word" data-term="beschaffenheit" data-pattern="abweichende beschaffenheit|abweichenden beschaffenheit|beschaffenheit">abweichende Beschaffenheit</span>
+        <span class="word" data-term="falschlieferung" data-pattern="falschlieferung|falsche lieferung|falsch geliefert">Falschlieferung</span>
+        <span class="word" data-term="minderlieferung" data-pattern="minderlieferung|zu wenig geliefert|zuwenig geliefert|geringere menge">Minderlieferung</span>
+        <span class="word" data-term="unverzueglich" data-pattern="unverzüglich|unverzueglich|ohne schuldhaftes zögern|ohne schuldhaftes zoegern">unverzüglich</span>
+        <span class="word" data-term="nacherfuellung" data-pattern="nacherfüllung|nacherfuellung">Nacherfüllung</span>
+        <span class="word" data-term="ersatzlieferung" data-pattern="ersatzlieferung|nachlieferung|lieferung der mangelfreien sache">Ersatzlieferung</span>
+      </div>
+    </div>
+
+    <div class="field-grid">
+      <div class="field">
+        <label for="recipient">Empfänger</label>
+        <input id="recipient" class="save editable watch-term" data-key="recipient" type="text" placeholder="Empfänger aus dem Fall eintragen">
+      </div>
+      <div class="field">
+        <label for="sender">Absender</label>
+        <input id="sender" class="save editable watch-term" data-key="sender" type="text" placeholder="Absender aus dem Fall eintragen">
+      </div>
+      <div class="field full">
+        <label for="subject">Betreff</label>
+        <input id="subject" class="save editable watch-term" data-key="subject" type="text" placeholder="Betreff mit Mängelrüge, Bestell-Nr. und Lieferschein-Nr.">
+      </div>
+      <div class="field full">
+        <label for="salutation">Anrede</label>
+        <input id="salutation" class="save editable watch-term" data-key="salutation" type="text" placeholder="Anrede eintragen">
+      </div>
+      <div class="field full">
+        <label for="intro">Einleitung / Bezug</label>
+        <textarea id="intro" class="save editable short watch-term" data-key="intro" placeholder="Bezug auf Bestellung, Auftragsbestätigung und Lieferschein formulieren"></textarea>
+      </div>
+      <div class="field full">
+        <label for="defects">Mängel genau beschreiben</label>
+        <textarea id="defects" class="save editable watch-term" data-key="defects" placeholder="Bestellt vs. geliefert; alle Abweichungen vollständig nennen"></textarea>
+      </div>
+      <div class="field full">
+        <label for="legal">Rechtlicher Hinweis / schnelle Rüge</label>
+        <textarea id="legal" class="save editable short watch-term" data-key="legal" placeholder="Sachmangel und unverzügliche Rüge nach Wareneingang nennen"></textarea>
+      </div>
+      <div class="field full">
+        <label for="claim">Forderung an den Lieferanten</label>
+        <textarea id="claim" class="save editable watch-term" data-key="claim" placeholder="Nacherfüllung, Ersatzlieferung/Nachlieferung, Abholung und Frist formulieren"></textarea>
+      </div>
+      <div class="field full">
+        <label for="closing">Schlusssatz / Gruß</label>
+        <textarea id="closing" class="save editable short watch-term" data-key="closing" placeholder="Rückmeldung erbitten, Grußformel und Name eintragen"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Schritt 3 - Bausteine zusammenfügen und korrekturlesen</div>
+  <div class="aufgabe">
+    <div class="aufgabe-head">
+      <div class="nr-badge">3</div>
+      <div class="aufgabe-title">Füge deine Einzelbausteine zusammen. Lies die Endfassung danach genau Korrektur.</div>
+      <span class="badge e">E</span>
+    </div>
+    <div class="aufgabe-hint">Die Endfassung wird aus deinen Bausteinen erzeugt. Du darfst sie danach sprachlich verbessern, kürzen oder ergänzen.</div>
+
+    <div class="action-row no-print">
+      <button class="inline-btn" onclick="combineBlocks()">🧩 Alle Einzelbausteine zusammenfügen</button>
+      <button class="inline-btn secondary" onclick="copyFinalText()">📋 Endfassung kopieren</button>
+      <span class="status-msg" id="combineStatus">Noch keine Endfassung erzeugt.</span>
+    </div>
+
+    <div class="letter-box">
+      <div class="letter-top">
+        <span>Endfassung - Korrekturlesen</span>
+        <span style="font-size:8pt; font-weight:600; opacity:0.9;">bearbeitbar · druckbar</span>
+      </div>
+      <div class="letter-body">
+        <div class="letter-row">
+          <div class="label">Von</div>
+          <input id="final_sender" class="save editable watch-term" data-key="final_sender" type="text" placeholder="wird aus dem Absender-Baustein übernommen">
+        </div>
+        <div class="letter-row">
+          <div class="label">An</div>
+          <input id="final_recipient" class="save editable watch-term" data-key="final_recipient" type="text" placeholder="wird aus dem Empfänger-Baustein übernommen">
+        </div>
+        <div class="letter-row">
+          <div class="label">Betreff</div>
+          <input id="final_subject" class="save editable watch-term" data-key="final_subject" type="text" placeholder="wird aus dem Betreff-Baustein übernommen">
+        </div>
+        <div class="letter-row">
+          <div class="label">Text</div>
+          <textarea id="final_text" class="save editable long watch-term" data-key="final_text" placeholder="Hier erscheint nach dem Zusammenfügen deine Endfassung. Lies sie anschließend Korrektur."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Schritt 4 - Selbstcheck vor der Abgabe</div>
+  <div class="quality-box">
+    <div class="quality-card">
+      <h4>✅ Inhalt</h4>
+      <ul>
+        <li>Bestellung, Auftragsbestätigung und Lieferschein werden genannt.</li>
+        <li>Falschlieferung und Minderlieferung sind konkret beschrieben.</li>
+        <li>Der Sachmangel und die unverzügliche Rüge sind erkennbar.</li>
+        <li>Die Forderung ist eindeutig.</li>
+        <li>Eine Frist oder Bitte um schnelle Rückmeldung ist enthalten.</li>
+      </ul>
+    </div>
+    <div class="quality-card">
+      <h4>✅ Sprache</h4>
+      <ul>
+        <li>Der Ton ist höflich und sachlich.</li>
+        <li>Die Sätze sind vollständig und verständlich.</li>
+        <li>Fachbegriffe werden passend verwendet.</li>
+        <li>Rechtschreibung und Zeichensetzung wurden geprüft.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="teacher-note no-print">
+    <strong>Hinweis:</strong> Diese Datei funktioniert ohne Server. Die Daten werden nur lokal im Browser gespeichert. Für Abgabe: ausdrucken, als PDF speichern oder den kopierten Text in Teams einfügen.
+  </div>
+
+  <div class="footer-line">
+    <span>Bürobedarf Schulz GmbH · Mängelrüge · § 434 BGB · § 377 HGB · §§ 437, 439 BGB</span>
+    <span>Seite 1 von 1</span>
+  </div>
+</div>
+
+<script>
+  const STORAGE_PREFIX = 'maengelruege_schulz_v3_';
+
+  function getVal(id) {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  function normalizeText(value) {
+    return (value || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  }
+
+  function allWritingText() {
+    const ids = ['recipient','sender','subject','salutation','intro','defects','legal','claim','closing','final_sender','final_recipient','final_subject','final_text'];
+    return normalizeText(ids.map(id => getVal(id)).join(' '));
+  }
+
+  function updateTermBank() {
+    const text = allWritingText();
+    document.querySelectorAll('.word[data-pattern]').forEach(word => {
+      const patterns = word.dataset.pattern.split('|').map(p => normalizeText(p));
+      const used = patterns.some(pattern => text.includes(pattern));
+      word.classList.toggle('used', used);
+    });
+  }
+
+  function evaluateChecks() {
+    let selectedCorrect = 0;
+    let selectedWrong = 0;
+    let totalCorrect = 0;
+
+    document.querySelectorAll('.check-answer').forEach(input => {
+      const label = input.closest('.check-item');
+      const isCorrect = input.dataset.correct === 'true';
+      if (isCorrect) totalCorrect++;
+      label.classList.remove('correct-selected', 'wrong-selected');
+
+      if (input.checked && isCorrect) {
+        selectedCorrect++;
+        label.classList.add('correct-selected');
+      }
+      if (input.checked && !isCorrect) {
+        selectedWrong++;
+        label.classList.add('wrong-selected');
+      }
+    });
+
+    const missing = totalCorrect - selectedCorrect;
+    const fb = document.getElementById('checkFeedback');
+    if (!fb) return;
+    if (selectedCorrect === 0 && selectedWrong === 0) {
+      fb.innerHTML = 'Noch keine Auswahl getroffen.';
+      return;
+    }
+    fb.innerHTML = `<strong class="green">${selectedCorrect}</strong> richtige Bestandteile angekreuzt. ` +
+                   `<strong class="red">${selectedWrong}</strong> unpassende Bestandteile angekreuzt. ` +
+                   (missing > 0 ? `Noch fehlen ${missing} richtige Bestandteile.` : 'Alle richtigen Bestandteile wurden ausgewählt.');
+  }
+
+  function combineBlocks() {
+    const sender = getVal('sender');
+    const recipient = getVal('recipient');
+    const subject = getVal('subject');
+    const salutation = getVal('salutation');
+    const intro = getVal('intro');
+    const defects = getVal('defects');
+    const legal = getVal('legal');
+    const claim = getVal('claim');
+    const closing = getVal('closing');
+
+    const bodyParts = [salutation, intro, defects, legal, claim, closing].filter(Boolean);
+    const body = bodyParts.join('\n\n');
+
+    document.getElementById('final_sender').value = sender;
+    document.getElementById('final_recipient').value = recipient;
+    document.getElementById('final_subject').value = subject;
+    document.getElementById('final_text').value = body;
+
+    const missing = [];
+    if (!sender) missing.push('Absender');
+    if (!recipient) missing.push('Empfänger');
+    if (!subject) missing.push('Betreff');
+    if (!salutation) missing.push('Anrede');
+    if (!intro) missing.push('Einleitung/Bezug');
+    if (!defects) missing.push('Mängelbeschreibung');
+    if (!legal) missing.push('rechtlicher Hinweis');
+    if (!claim) missing.push('Forderung');
+    if (!closing) missing.push('Schluss/Gruß');
+
+    const status = document.getElementById('combineStatus');
+    if (missing.length) {
+      status.textContent = 'Endfassung erzeugt. Noch prüfen/ergänzen: ' + missing.join(', ') + '.';
+    } else {
+      status.textContent = 'Endfassung erzeugt. Jetzt Korrektur lesen.';
+    }
+
+    saveAll();
+    updateTermBank();
+  }
+
+  async function copyFinalText() {
+    const text = [getVal('final_sender'), getVal('final_recipient'), getVal('final_subject'), getVal('final_text')].filter(Boolean).join('\n\n');
+    if (!text.trim()) {
+      alert('Es gibt noch keine Endfassung zum Kopieren. Füge zuerst deine Bausteine zusammen.');
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      alert('Die Endfassung wurde kopiert.');
+    } catch (e) {
+      alert('Kopieren war nicht möglich. Markiere den Text bitte manuell.');
+    }
+  }
+
+  function saveAll() {
+    document.querySelectorAll('.save').forEach(el => {
+      const key = el.dataset.key;
+      if (!key) return;
+      if (el.type === 'checkbox') {
+        localStorage.setItem(STORAGE_PREFIX + key, el.checked ? '1' : '0');
+      } else {
+        localStorage.setItem(STORAGE_PREFIX + key, el.value);
+      }
+    });
+  }
+
+  function loadAll() {
+    document.querySelectorAll('.save').forEach(el => {
+      const key = el.dataset.key;
+      if (!key) return;
+      const saved = localStorage.getItem(STORAGE_PREFIX + key);
+      if (saved === null) return;
+      if (el.type === 'checkbox') {
+        el.checked = saved === '1';
+      } else {
+        el.value = saved;
+      }
+    });
+  }
+
+  function resetForm() {
+    if (!confirm('Alle lokalen Eingaben in dieser Datei löschen?')) return;
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith(STORAGE_PREFIX)) localStorage.removeItem(key);
+    });
+    document.querySelectorAll('textarea').forEach(el => el.value = '');
+    document.querySelectorAll('input[type="text"]').forEach(el => el.value = '');
+    document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+    const status = document.getElementById('combineStatus');
+    if (status) status.textContent = 'Noch keine Endfassung erzeugt.';
+    evaluateChecks();
+    updateTermBank();
+  }
+
+  document.addEventListener('input', e => {
+    if (e.target.classList && e.target.classList.contains('save')) saveAll();
+    if (e.target.classList && e.target.classList.contains('watch-term')) updateTermBank();
+  });
+  document.addEventListener('change', e => {
+    if (e.target.classList && e.target.classList.contains('save')) saveAll();
+    if (e.target.classList && e.target.classList.contains('check-answer')) evaluateChecks();
+    updateTermBank();
+  });
+
+  loadAll();
+  evaluateChecks();
+  updateTermBank();
+</script>
+</body>
+</html>
