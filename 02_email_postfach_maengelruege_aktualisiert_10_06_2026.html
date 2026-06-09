@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mängelrüge absenden · E-Mail-Reaktion</title>
+<style>
+:root{
+  --blue:#1a3a8f;
+  --blue-dark:#10256a;
+  --blue-light:#eaf0ff;
+  --green:#1a9e5c;
+  --green-light:#e8f9f1;
+  --red:#cc0000;
+  --red-light:#fff0f0;
+  --orange:#e07b00;
+  --orange-light:#fff4e0;
+  --yellow:#fff9e0;
+  --yellow-border:#e0c000;
+  --text:#172033;
+  --muted:#64748b;
+  --border:#c8d0e8;
+  --bg:#f3f5fb;
+  --paper:#ffffff;
+  --dark:#111827;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.45;font-size:15px}
+button,select{font-family:inherit}
+.topbar{position:sticky;top:0;z-index:50;background:var(--dark);color:white;padding:10px 14px;display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;box-shadow:0 3px 14px rgba(15,23,42,.22)}
+.btn{border:0;border-radius:8px;padding:9px 13px;font-weight:800;cursor:pointer;background:#fff;color:#111827;transition:.15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:#dbeafe;color:#10256a}.btn.success{background:#dcfce7;color:#14532d}.btn.warn{background:#fee2e2;color:#991b1b}.btn.disabled{opacity:.45;cursor:not-allowed;transform:none}.btn.send{background:var(--green);color:white;font-size:15px;padding:11px 16px;display:none}.btn.send.show{display:inline-flex;align-items:center;gap:7px}.top-hint{font-size:12px;color:#d1d5db}
+.page{max-width:1180px;margin:18px auto;background:var(--paper);border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.15);overflow:hidden}
+.header{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:white;padding:26px 30px}.badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:999px;padding:5px 11px;font-weight:800;font-size:12px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:9px}.header h1{font-size:28px;margin-bottom:6px}.header p{opacity:.92}.content{padding:24px 30px 30px}.case{background:var(--blue-light);border:2px solid var(--blue);border-radius:12px;padding:16px;margin-bottom:20px}.case h2{font-size:16px;color:var(--blue);margin-bottom:8px}.hint{background:var(--orange-light);border-left:5px solid var(--orange);border-radius:10px;padding:12px 14px;margin:16px 0}.hint strong{color:#7a3d00}.layout{display:grid;grid-template-columns:390px 1fr;gap:18px;align-items:start}.panel{border:1.5px solid var(--border);border-radius:14px;background:#fff;padding:16px;box-shadow:0 2px 10px rgba(15,23,42,.05)}.panel h3{font-size:16px;color:var(--blue);margin-bottom:8px}.small{font-size:13px;color:var(--muted)}
+.control-block{border:1.5px solid var(--border);border-radius:12px;background:#fbfcff;padding:12px;margin-bottom:12px;transition:.18s}.control-block.correct{background:var(--green-light);border-color:var(--green)}.control-block.wrong{background:var(--red-light);border-color:var(--red)}.control-title{font-weight:900;color:var(--blue);font-size:14px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:10px}.status{font-size:12px;font-weight:900;border-radius:999px;padding:3px 8px;background:#e2e8f0;color:#334155}.correct .status{background:#dcfce7;color:#14532d}.wrong .status{background:#fee2e2;color:#991b1b}select{width:100%;border:1.5px solid var(--border);border-radius:8px;background:white;padding:8px 9px;font-size:14px;color:#172033}select:focus{outline:2px solid #bfdbfe;border-color:var(--blue)}.correct select{border-color:var(--green);background:#f7fff9}.wrong select{border-color:var(--red);background:#fffafa}
+.letter-mask{background:#f8fafc;border:1px solid #d9e2f3;border-radius:14px;padding:16px}.letter-paper{background:white;width:100%;min-height:760px;border:1px solid #cfd8ea;box-shadow:0 5px 18px rgba(15,23,42,.10);padding:18mm 18mm 16mm 24mm;color:#111}.sender-line{font-size:8pt;color:#555;border-bottom:1px solid #b6b6b6;padding-bottom:2px;min-height:16px;margin-bottom:4mm}.recipient-block{min-height:35mm;font-size:10pt;line-height:1.35;white-space:pre-wrap}.subject-block{font-weight:800;margin:8mm 0 5mm;font-size:11pt;min-height:22px}.text-block{font-size:11pt;line-height:1.5;white-space:pre-wrap;min-height:300px}.placeholder{color:#9ca3af;font-style:italic}.mask-label{font-size:8pt;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;font-weight:800;margin-bottom:3px}.preview-box{border-left:4px solid #e5e7eb;padding-left:8px;margin-bottom:8mm}.preview-box.correct{border-left-color:var(--green)}.preview-box.wrong{border-left-color:var(--red)}
+.text-builder{margin-top:14px}.text-card{border:1.5px solid var(--border);border-left:6px solid var(--blue);border-radius:12px;background:#fff;padding:10px 11px;margin-bottom:10px;transition:.18s}.text-card.correct{background:var(--green-light);border-color:var(--green)}.text-card.wrong{background:var(--red-light);border-color:var(--red)}.text-card-top{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;margin-bottom:7px}.text-card p{font-size:14px;line-height:1.45}.position-select{max-width:150px;flex-shrink:0}.feedback-line{font-size:12px;font-weight:800;color:#64748b;margin-top:5px}.text-card.correct .feedback-line{color:#14532d}.text-card.wrong .feedback-line{color:#991b1b}.progress{background:#eef2ff;border:1px solid #c7d2fe;border-radius:12px;padding:12px;margin-top:14px;color:#10256a;font-weight:800}.footer{border-top:1px solid #e5e7eb;padding:12px 30px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:10px}
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.72);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}.overlay.show{display:flex}.timer-card{background:white;border-radius:18px;padding:26px 30px;max-width:440px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35)}.timer-card h2{color:var(--blue);font-size:23px;margin-bottom:8px}.timer-number{font-size:56px;font-weight:900;color:var(--blue);line-height:1.1;margin:14px 0}.bar{height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:14px 0}.bar-fill{height:100%;width:0%;background:var(--blue);transition:width .25s}.mail-push{position:fixed;right:22px;bottom:22px;z-index:120;background:#fff;border:2px solid var(--blue);border-left:8px solid var(--green);box-shadow:0 12px 35px rgba(15,23,42,.24);border-radius:14px;padding:14px 16px;min-width:310px;cursor:pointer;display:none;animation:slideIn .3s ease}.mail-push.show{display:block}.mail-push strong{display:block;color:var(--blue);font-size:16px;margin-bottom:3px}.mail-push span{font-size:13px;color:#334155}@keyframes slideIn{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+#mailSection{display:none}.mail-app{max-width:1180px;margin:18px auto;background:white;border-radius:18px;overflow:hidden;box-shadow:0 10px 35px rgba(15,23,42,.15)}.mail-top{background:linear-gradient(135deg,var(--dark),#1a3a8f);color:white;padding:22px 26px}.mail-top h1{font-size:26px;margin-bottom:4px}.mail-layout{display:grid;grid-template-columns:340px 1fr;min-height:650px}.inbox{border-right:1px solid var(--border);background:#f8fafc;padding:14px}.folder{font-weight:800;color:#334155;margin:8px 0 14px}.mailitem{background:white;border:1.5px solid var(--border);border-left:6px solid var(--blue);border-radius:12px;padding:13px;margin-bottom:10px}.mailitem.unread{border-left-color:var(--red);box-shadow:0 3px 10px rgba(204,0,0,.09)}.from{font-weight:800}.subject{font-weight:800;color:#1a3a8f}.snippet{font-size:13px;color:var(--muted);margin-top:5px}.mail{padding:24px 30px}.meta{border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:18px}.pill{display:inline-block;border-radius:999px;background:#fee2e2;color:#991b1b;font-size:12px;font-weight:800;padding:4px 9px;margin-bottom:9px}.row{display:grid;grid-template-columns:90px 1fr;gap:10px;margin:5px 0}.row .label{color:var(--muted);font-weight:800}.body{font-size:16px}.body p{margin-bottom:13px}.quote{background:var(--yellow);border-left:5px solid var(--yellow-border);border-radius:8px;padding:13px 15px;margin:16px 0}.task{background:#eaf0ff;border:2px solid #1a3a8f;border-radius:12px;padding:16px;margin-top:18px}.task h2{font-size:17px;color:#1a3a8f;margin-bottom:8px}.check{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}.check div{border:1px solid var(--border);border-radius:10px;padding:10px;background:white}
+.locked-note{display:none;background:var(--green-light);border:2px solid var(--green);color:#064e2b;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-weight:800}.locked-note.show{display:block}
+@media(max-width:980px){.layout,.mail-layout{grid-template-columns:1fr}.letter-paper{padding:13mm}.inbox{border-right:0;border-bottom:1px solid var(--border)}.check{grid-template-columns:1fr}.page,.mail-app{margin:0;border-radius:0}.header h1,.mail-top h1{font-size:23px}.content{padding:18px}.mail{padding:20px}.mail-push{left:14px;right:14px;bottom:14px;min-width:unset}}
+@media print{body{background:white}.topbar,.overlay,.mail-push,.inbox{display:none!important}.page,.mail-app{box-shadow:none;margin:0;border-radius:0}.layout{display:block}.panel.controls{display:none}.letter-mask{border:0;padding:0}.letter-paper{border:0;box-shadow:none;padding:13mm 18mm}.footer{display:none}#mailSection{display:block}.mail-layout{display:block}.mail-top{padding:18px}.task{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="btn" onclick="resetAll()">🗑️ Zurücksetzen</button>
+  <button class="btn" onclick="window.print()">🖨️ Drucken / PDF</button>
+  <button id="sendBtn" class="btn send" onclick="sendComplaint()">📨 Mängelrüge absenden</button>
+  <span class="top-hint">Der Absende-Button erscheint erst, wenn alle Briefbausteine korrekt sind.</span>
+</div>
+
+<div class="page" id="editorSection">
+  <section class="header">
+    <div class="badge">Digitale Strukturlegetechnik · DIN-5008-Maske</div>
+    <h1>Mängelrüge: Nacherfüllung fordern</h1>
+    <p>Wähle die passenden Briefbausteine aus und ordne die Textbausteine richtig. Du erhältst direkt farbliches Feedback.</p>
+  </section>
+
+  <main class="content">
+    <section class="case">
+      <h2>📋 Lernsituation – Bürobedarf Schulz GmbH</h2>
+      <p>Bei der Wareneingangskontrolle wurde festgestellt: Bestellt waren <strong>50 Bürostühle „ErgoPro 500“</strong> in Schwarz mit höhenverstellbaren Armlehnen und Lordosenstütze. Geliefert wurden <strong>48 Bürostühle „ErgoPro 400“</strong> in Grau mit festen Armlehnen und ohne Lordosenstütze. Die Lieferung weicht damit von Bestellung und Auftragsbestätigung ab.</p>
+    </section>
+
+    <div class="hint"><strong>Arbeitsauftrag:</strong> Erstelle eine verkürzte Mängelrüge. Sie muss den Mangel anzeigen und Nacherfüllung verlangen. Erst wenn alle Felder richtig sind, kannst du die Mängelrüge absenden.</div>
+    <div class="locked-note" id="lockedNote">✅ Die Mängelrüge wurde abgesendet. Warte auf die Rückmeldung des Lieferanten.</div>
+
+    <div class="layout">
+      <section class="panel controls">
+        <h3>1. Briefbausteine auswählen</h3>
+        <p class="small" style="margin-bottom:12px">Wähle aus den Drop-down-Menüs die passenden Angaben aus. Richtige Felder werden grün markiert.</p>
+
+        <div class="control-block" id="senderBlock">
+          <div class="control-title">Absender <span class="status" id="senderStatus">offen</span></div>
+          <select id="senderSelect" onchange="validateAll()">
+            <option value="">Bitte auswählen …</option>
+            <option value="wrong1">OfficeLine GmbH, Lieferantenweg 5, 70000 Stuttgart</option>
+            <option value="sender">Bürobedarf Schulz GmbH, Musterstraße 12, 80333 München</option>
+            <option value="wrong2">Bürobedarf Schulz GmbH, Lieferantenweg 5, 70000 Stuttgart</option>
+          </select>
+        </div>
+
+        <div class="control-block" id="recipientBlock">
+          <div class="control-title">Empfänger <span class="status" id="recipientStatus">offen</span></div>
+          <select id="recipientSelect" onchange="validateAll()">
+            <option value="">Bitte auswählen …</option>
+            <option value="wrong1">Bürobedarf Schulz GmbH, Musterstraße 12, 80333 München</option>
+            <option value="recipient">OfficeLine GmbH, Lieferantenweg 5, 70000 Stuttgart</option>
+            <option value="wrong2">OfficeLine GmbH, Musterstraße 12, 80333 München</option>
+          </select>
+        </div>
+
+        <div class="control-block" id="subjectBlock">
+          <div class="control-title">Betreff <span class="status" id="subjectStatus">offen</span></div>
+          <select id="subjectSelect" onchange="validateAll()">
+            <option value="">Bitte auswählen …</option>
+            <option value="wrong1">Bestellung neuer Bürostühle</option>
+            <option value="subject">Mängelrüge zur Lieferung vom 10.06.2026 – Bestellung B-2025-047 / Lieferschein LS-8812</option>
+            <option value="wrong2">Rücktritt vom Kaufvertrag ohne weitere Prüfung</option>
+          </select>
+        </div>
+
+        <div class="text-builder">
+          <h3 style="margin-top:14px">2. Textfeld zusammensetzen</h3>
+          <p class="small" style="margin-bottom:10px">Ordne die Textbausteine über die Positionsfelder in die richtige Reihenfolge. Bringe die Textbausteine in die richtige Reihenfolge.</p>
+          <div id="textCards"></div>
+        </div>
+
+        <div class="progress" id="progressBox">Fortschritt: 0 von 10 Bausteinen korrekt.</div>
+      </section>
+
+      <section class="panel">
+        <h3>DIN-5008-Briefmaske</h3>
+        <p class="small" style="margin-bottom:12px">Die Maske füllt sich automatisch aus deinen gewählten Bausteinen.</p>
+        <div class="letter-mask">
+          <div class="letter-paper">
+            <div class="preview-box" id="previewSenderBox">
+              <div class="mask-label">Absenderzeile</div>
+              <div class="sender-line" id="previewSender"><span class="placeholder">Absender auswählen …</span></div>
+            </div>
+            <div class="preview-box" id="previewRecipientBox">
+              <div class="mask-label">Anschriftfeld</div>
+              <div class="recipient-block" id="previewRecipient"><span class="placeholder">Empfänger auswählen …</span></div>
+            </div>
+            <div class="preview-box" id="previewSubjectBox">
+              <div class="mask-label">Betreffzeile</div>
+              <div class="subject-block" id="previewSubject"><span class="placeholder">Betreff auswählen …</span></div>
+            </div>
+            <div class="preview-box" id="previewTextBox">
+              <div class="mask-label">Textfeld</div>
+              <div class="text-block" id="previewText"><span class="placeholder">Textbausteine in die richtige Reihenfolge bringen …</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer class="footer"><span>ÖB Klasse Z10 · Kaufvertragsstörungen</span><span>Fokus: Sachmangel → Mängelrüge → Nacherfüllung</span></footer>
+</div>
+
+<section id="mailSection">
+  <div class="mail-app">
+    <header class="mail-top"><h1>📥 E-Mail-Eingang: Bürobedarf Schulz GmbH</h1><p>Neue Nachricht nach der versendeten Mängelrüge</p></header>
+    <div class="mail-layout">
+      <aside class="inbox">
+        <div class="folder">Posteingang · 1 ungelesene Nachricht</div>
+        <div class="mailitem unread">
+          <div class="from">OfficeLine GmbH</div>
+          <div class="subject">Ihre Mängelrüge zur Lieferung LS-8812</div>
+          <div class="snippet">Leider können wir die geforderte Ersatzlieferung nicht ausführen …</div>
+        </div>
+        <div class="mailitem">
+          <div class="from">Lager Schulz GmbH</div>
+          <div class="subject">Wareneingang abgeschlossen</div>
+          <div class="snippet">Die falsch gelieferten Stühle stehen separat im Lagerbereich B …</div>
+        </div>
+      </aside>
+      <main class="mail">
+        <div class="meta">
+          <span class="pill">NEUE REAKTION DES LIEFERANTEN</span>
+          <h2>Ihre Mängelrüge zur Lieferung LS-8812</h2>
+          <div class="row"><div class="label">Von:</div><div>OfficeLine GmbH &lt;service@officeline-beispiel.de&gt;</div></div>
+          <div class="row"><div class="label">An:</div><div>Deinvorname.Nachname, Bürobedarf Schulz GmbH</div></div>
+          <div class="row"><div class="label">Datum:</div><div>10.06.2026, 10:20 Uhr</div></div>
+          <div class="row"><div class="label">Betreff:</div><div>Ihre Mängelrüge zur Lieferung LS-8812</div></div>
+        </div>
+        <section class="body">
+          <p>Hallo,</p>
+          <p>vielen Dank für Ihre Nachricht zur Lieferung vom 10.06.2026. Wir haben Ihre Mängelrüge geprüft.</p>
+          <p>Sie hatten uns aufgefordert, bis spätestens 17.06.2026 mitzuteilen, wann die Ersatzlieferung der bestellten 50 Bürostühle „ErgoPro 500“ in Schwarz mit höhenverstellbaren Armlehnen und Lordosenstütze erfolgt.</p>
+          <div class="quote"><strong>Leider können wir die geforderte Ersatzlieferung nicht ausführen.</strong><br>Das Modell „ErgoPro 500“ ist bei uns aktuell nicht lieferbar. Auch eine kurzfristige Nachlieferung der fehlenden zwei Stühle ist nicht möglich. Die von uns gelieferte Ware können wir daher nicht mehr in die ursprünglich bestellte Ware umtauschen.</div>
+          <p>Wir bieten Ihnen alternativ an, die 48 gelieferten Bürostühle „ErgoPro 400“ zum reduzierten Gesamtpreis von <strong>2.400,00 € netto</strong> zu behalten. Falls Sie damit nicht einverstanden sind, holen wir die gelieferte Ware wieder bei Ihnen ab.</p>
+          <p>Bitte teilen Sie uns bis zum 17.06.2026 mit, wie Sie weiter verfahren möchten.</p>
+          <p>Mit freundlichen Grüßen<br>i. A. Tobias Keller<br>OfficeLine GmbH</p>
+        </section>
+        <section class="task">
+          <h2>Arbeitsauftrag für die nächste Handlung</h2>
+          <p>Die Nacherfüllung wurde verlangt. Der Lieferant kann sie aber nicht ausführen. Hole dir vorne deine rechtliche Grundlage ab und bearbeite den Prozess auf Papier weiter. Am Ende kannst du diese drei Fragen beantworten.</p>
+          <div class="check"><div><strong>1. Markiere:</strong><br>Was sagt der Lieferant zur Ersatzlieferung?</div><div><strong>2. Prüfe:</strong><br>Ist die Nacherfüllung gescheitert oder nicht möglich?</div><div><strong>3. Handle:</strong><br>Welche Konsequenz ist für die Schulz GmbH sinnvoll?</div></div>
+        </section>
+      </main>
+    </div>
+  </div>
+</section>
+
+<div class="overlay" id="timerOverlay" aria-live="polite">
+  <div class="timer-card">
+    <h2>📨 Mängelrüge wurde gesendet</h2>
+    <p>Warte auf die Rückmeldung des Lieferanten.</p>
+    <div class="timer-number"><span id="timerNumber">30</span></div>
+    <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+    <p class="small">Die neue E-Mail erscheint automatisch nach Ablauf des Timers.</p>
+  </div>
+</div>
+
+<div class="mail-push" id="mailPush" onclick="openMail()">
+  <strong>📩 Sie haben eine neue E-Mail</strong>
+  <span>OfficeLine GmbH · Ihre Mängelrüge zur Lieferung LS-8812</span>
+</div>
+
+<script>
+const correct = {
+  sender: 'sender',
+  recipient: 'recipient',
+  subject: 'subject'
+};
+const values = {
+  sender: 'Bürobedarf Schulz GmbH, Musterstraße 12, 80333 München',
+  recipient: 'OfficeLine GmbH\nLieferantenweg 5\n70000 Stuttgart',
+  subject: 'Mängelrüge zur Lieferung vom 10.06.2026 – Bestellung B-2025-047 / Lieferschein LS-8812'
+};
+const textBlocks = [
+  {id:'salutation', order:1, text:'Sehr geehrte Damen und Herren,'},
+  {id:'intro', order:2, text:'wir beziehen uns auf unsere Bestellung B-2025-047 vom 01.06.2026, Ihre Auftragsbestätigung AB-2025-1138 vom 03.06.2026 sowie die Lieferung laut Lieferschein LS-8812.'},
+  {id:'defect', order:3, text:'Bei der Wareneingangskontrolle haben wir festgestellt, dass die Lieferung von der vereinbarten Beschaffenheit abweicht. Bestellt waren 50 Bürostühle „ErgoPro 500“ in Schwarz mit höhenverstellbaren Armlehnen und Lordosenstütze. Geliefert wurden jedoch nur 48 Bürostühle „ErgoPro 400“ in Grau mit festen Armlehnen und ohne Lordosenstütze.'},
+  {id:'law', order:4, text:'Damit liegt ein Sachmangel vor. Wir rügen diesen Mangel unverzüglich nach Prüfung des Wareneingangs.'},
+  {id:'demand', order:5, text:'Wir verlangen Nacherfüllung durch Lieferung der vertragsgemäßen Ware. Bitte liefern Sie die bestellten 50 Bürostühle „ErgoPro 500“ in Schwarz und holen Sie die falsch gelieferten Stühle ab.'},
+  {id:'deadline', order:6, text:'Bitte teilen Sie uns bis spätestens 17.06.2026 mit, wann die Ersatzlieferung erfolgt.'},
+  {id:'closing', order:7, text:'Vielen Dank für Ihre schnelle Rückmeldung.\n\nMit freundlichen Grüßen\nMonika Schulz\nBürobedarf Schulz GmbH'}
+];
+const shuffled = ['law','salutation','demand','closing','intro','deadline','defect'];
+const totalChecks = 3 + textBlocks.length;
+let hasSent = false;
+
+function setupTextCards(){
+  const container = document.getElementById('textCards');
+  container.innerHTML = '';
+  shuffled.forEach(id => {
+    const block = textBlocks.find(b => b.id === id);
+    const card = document.createElement('div');
+    card.className = 'text-card';
+    card.id = `card-${block.id}`;
+    card.innerHTML = `
+      <div class="text-card-top">
+        <p>${block.text.replaceAll('\n','<br>')}</p>
+        <select class="position-select" id="pos-${block.id}" onchange="validateAll()">
+          <option value="">Position …</option>
+          ${textBlocks.map((_,i)=>`<option value="${i+1}">${i+1}</option>`).join('')}
+        </select>
+      </div>
+      <div class="feedback-line" id="feed-${block.id}">Noch nicht geprüft.</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function setBlockState(blockId, statusId, state){
+  const block = document.getElementById(blockId);
+  const status = document.getElementById(statusId);
+  block.classList.remove('correct','wrong');
+  if(state === 'correct'){
+    block.classList.add('correct');
+    status.textContent = 'richtig';
+  } else if(state === 'wrong'){
+    block.classList.add('wrong');
+    status.textContent = 'prüfen';
+  } else {
+    status.textContent = 'offen';
+  }
+}
+
+function fieldCorrect(field){
+  return document.getElementById(`${field}Select`).value === correct[field];
+}
+
+function updatePreview(field, isCorrect){
+  const element = document.getElementById(`preview${capitalize(field)}`);
+  const box = document.getElementById(`preview${capitalize(field)}Box`);
+  box.classList.remove('correct','wrong');
+  if(isCorrect){
+    element.textContent = values[field];
+    box.classList.add('correct');
+  } else {
+    const chosen = document.getElementById(`${field}Select`).value;
+    element.innerHTML = `<span class="placeholder">${labelFor(field)} auswählen …</span>`;
+    if(chosen){ box.classList.add('wrong'); }
+  }
+}
+
+function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+function labelFor(field){ return field === 'sender' ? 'Absender' : field === 'recipient' ? 'Empfänger' : 'Betreff'; }
+
+function validateAll(){
+  const senderOk = fieldCorrect('sender');
+  const recipientOk = fieldCorrect('recipient');
+  const subjectOk = fieldCorrect('subject');
+  setBlockState('senderBlock','senderStatus', document.getElementById('senderSelect').value ? (senderOk?'correct':'wrong') : 'open');
+  setBlockState('recipientBlock','recipientStatus', document.getElementById('recipientSelect').value ? (recipientOk?'correct':'wrong') : 'open');
+  setBlockState('subjectBlock','subjectStatus', document.getElementById('subjectSelect').value ? (subjectOk?'correct':'wrong') : 'open');
+  updatePreview('sender', senderOk);
+  updatePreview('recipient', recipientOk);
+  updatePreview('subject', subjectOk);
+
+  let correctCount = [senderOk, recipientOk, subjectOk].filter(Boolean).length;
+  const usedPositions = {};
+  textBlocks.forEach(block => {
+    const select = document.getElementById(`pos-${block.id}`);
+    const value = select.value;
+    if(value){ usedPositions[value] = (usedPositions[value] || 0) + 1; }
+  });
+
+  textBlocks.forEach(block => {
+    const select = document.getElementById(`pos-${block.id}`);
+    const value = select.value;
+    const card = document.getElementById(`card-${block.id}`);
+    const feed = document.getElementById(`feed-${block.id}`);
+    card.classList.remove('correct','wrong');
+    if(!value){
+      feed.textContent = 'Noch keine Position ausgewählt.';
+    } else if(Number(value) === block.order && usedPositions[value] === 1){
+      card.classList.add('correct');
+      feed.textContent = 'Richtig eingeordnet.';
+      correctCount++;
+    } else if(usedPositions[value] > 1){
+      card.classList.add('wrong');
+      feed.textContent = 'Diese Position wurde mehrfach vergeben.';
+    } else {
+      card.classList.add('wrong');
+      feed.textContent = 'Diese Position passt noch nicht.';
+    }
+  });
+
+  updateTextPreview();
+  document.getElementById('progressBox').textContent = `Fortschritt: ${correctCount} von ${totalChecks} Bausteinen korrekt.`;
+  const allCorrect = correctCount === totalChecks;
+  document.getElementById('sendBtn').classList.toggle('show', allCorrect && !hasSent);
+  return allCorrect;
+}
+
+function updateTextPreview(){
+  const preview = document.getElementById('previewText');
+  const box = document.getElementById('previewTextBox');
+  box.classList.remove('correct','wrong');
+  const assigned = [];
+  textBlocks.forEach(block => {
+    const val = document.getElementById(`pos-${block.id}`).value;
+    if(val){ assigned.push({pos:Number(val), text:block.text}); }
+  });
+  if(assigned.length === 0){
+    preview.innerHTML = '<span class="placeholder">Textbausteine in die richtige Reihenfolge bringen …</span>';
+    return;
+  }
+  assigned.sort((a,b)=>a.pos-b.pos);
+  preview.textContent = assigned.map(x=>x.text).join('\n\n');
+  const textAllCorrect = textBlocks.every(block => Number(document.getElementById(`pos-${block.id}`).value) === block.order);
+  box.classList.add(textAllCorrect ? 'correct' : 'wrong');
+}
+
+function resetAll(){
+  if(hasSent && !confirm('Die Mängelrüge wurde bereits abgesendet. Trotzdem zurücksetzen?')) return;
+  ['sender','recipient','subject'].forEach(field => document.getElementById(`${field}Select`).value = '');
+  textBlocks.forEach(block => document.getElementById(`pos-${block.id}`).value = '');
+  hasSent = false;
+  document.getElementById('mailSection').style.display='none';
+  document.getElementById('mailPush').classList.remove('show');
+  document.getElementById('lockedNote').classList.remove('show');
+  enableInputs(true);
+  validateAll();
+}
+
+function enableInputs(enabled){
+  document.querySelectorAll('select').forEach(sel => sel.disabled = !enabled);
+}
+
+function sendComplaint(){
+  if(!validateAll()) return;
+  hasSent = true;
+  document.getElementById('sendBtn').classList.remove('show');
+  document.getElementById('lockedNote').classList.add('show');
+  enableInputs(false);
+  const overlay = document.getElementById('timerOverlay');
+  const number = document.getElementById('timerNumber');
+  const fill = document.getElementById('barFill');
+  let remaining = 30;
+  number.textContent = remaining;
+  fill.style.width = '0%';
+  overlay.classList.add('show');
+  const interval = setInterval(() => {
+    remaining--;
+    number.textContent = remaining;
+    fill.style.width = `${((30-remaining)/30)*100}%`;
+    if(remaining <= 0){
+      clearInterval(interval);
+      overlay.classList.remove('show');
+      document.getElementById('mailPush').classList.add('show');
+    }
+  }, 1000);
+}
+
+function openMail(){
+  document.getElementById('mailPush').classList.remove('show');
+  const section = document.getElementById('mailSection');
+  section.style.display = 'block';
+  section.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+setupTextCards();
+validateAll();
+</script>
+</body>
+</html>
