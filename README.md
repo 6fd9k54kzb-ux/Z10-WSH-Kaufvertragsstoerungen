@@ -5,3 +5,5 @@
 2) Die erste Mängelrüge Editor: https://6fd9k54kzb-ux.github.io/HeiSop256.github.io/04_maengelruege-editor.html
 
 3) Mängelrüge und erfolglose Nacherfüllung https://6fd9k54kzb-ux.github.io/HeiSop256.github.io/02_email_postfach_maengelruege_aktualisiert_10_06_2026.html
+
+4) Firmen-Intranet zum Zahlungsverzug 
