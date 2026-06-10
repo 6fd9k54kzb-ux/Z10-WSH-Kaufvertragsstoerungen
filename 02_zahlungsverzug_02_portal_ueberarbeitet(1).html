@@ -1,0 +1,1929 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informationsportal – Zahlungsverzug im B2B | Schulz Office GmbH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & VARIABLES ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue-dark: #0f2d6b;
+      --blue-mid: #1a4a9e;
+      --blue-light: #e8edf8;
+      --yellow: #f0d050;
+      --yellow-bg: #fffbe6;
+      --green: #2e7d32;
+      --green-bg: #e8f5e9;
+      --green-border: #66bb6a;
+      --red: #c0392b;
+      --red-bg: #fdecea;
+      --red-border: #e57373;
+      --grey-bg: #f7f9ff;
+      --grey-border: #bdc9e8;
+      --radius: 10px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    body {
+      font-family: 'Outfit', Arial, sans-serif;
+      font-size: 11pt;
+      color: #1a1a2e;
+      background: #eef2fb;
+      line-height: 1.6;
+    }
+
+    /* ===== TOP NAV ===== */
+    .top-nav {
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 100%);
+      color: white;
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand { font-size: 13pt; font-weight: 700; }
+    .top-nav .brand span { opacity: 0.75; font-weight: 400; font-size: 10pt; margin-left: 8px; }
+    .step-indicator {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .step-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      transition: background 0.3s;
+    }
+    .step-dot.active { background: white; }
+    .step-dot.done { background: #66bb6a; }
+
+    /* ===== SECTIONS ===== */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ===== MAIN CONTAINER ===== */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 20px 40px 20px;
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+    }
+    .card-header {
+      font-size: 14pt;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 2px solid var(--blue-light);
+      padding-bottom: 10px;
+    }
+    .card-header .icon { font-size: 18pt; }
+
+    /* ===== START PAGE ===== */
+    .start-hero {
+      background: linear-gradient(135deg, var(--blue-dark), var(--blue-mid));
+      color: white;
+      border-radius: var(--radius);
+      padding: 36px 36px 30px 36px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .start-hero h1 { font-size: 22pt; font-weight: 700; margin-bottom: 8px; }
+    .start-hero .subtitle { font-size: 12pt; opacity: 0.9; margin-bottom: 20px; }
+    .start-hero .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 10pt;
+      margin-bottom: 24px;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .info-tile {
+      background: white;
+      border: 1.5px solid var(--grey-border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      font-size: 10.5pt;
+    }
+    .info-tile .tile-title {
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin-bottom: 5px;
+      font-size: 11pt;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 26px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 11pt;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--blue-mid);
+      color: white;
+    }
+    .btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); }
+    .btn-success {
+      background: var(--green);
+      color: white;
+    }
+    .btn-success:hover { background: #1b5e20; transform: translateY(-1px); }
+    .btn-secondary {
+      background: var(--grey-bg);
+      color: var(--blue-dark);
+      border: 1.5px solid var(--grey-border);
+    }
+    .btn-secondary:hover { background: var(--blue-light); }
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 20px; }
+
+    /* ===== INFO BOXES ===== */
+    .infobox {
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+    .infobox-blue {
+      background: #e8edf8;
+      border-left: 4px solid var(--blue-mid);
+    }
+    .infobox-yellow {
+      background: var(--yellow-bg);
+      border-left: 4px solid var(--yellow);
+    }
+    .infobox-green {
+      background: var(--green-bg);
+      border-left: 4px solid var(--green-border);
+    }
+    .infobox-red {
+      background: var(--red-bg);
+      border-left: 4px solid var(--red-border);
+    }
+    .infobox .infobox-title {
+      font-weight: 700;
+      font-size: 10.5pt;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ===== LAW PARAGRAPHS ===== */
+    .law-card {
+      border: 1.5px solid var(--grey-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .law-header {
+      background: var(--blue-dark);
+      color: white;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 11pt;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .law-body {
+      padding: 14px 18px;
+      background: white;
+    }
+    .law-original {
+      background: #f5f7ff;
+      border: 1px solid var(--grey-border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 9.5pt;
+      font-style: italic;
+      color: #444;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .law-erklaerung {
+      font-size: 10.5pt;
+      margin-bottom: 10px;
+    }
+    .law-merksatz {
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 10pt;
+      font-weight: 600;
+      color: var(--green);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    /* ===== DIFFERENTIATION BOXES ===== */
+    .diff-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .diff-box {
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 10pt;
+    }
+    .diff-box .diff-title {
+      font-weight: 700;
+      font-size: 10.5pt;
+      margin-bottom: 6px;
+    }
+    .diff-basis { background: #e3f2fd; border: 1.5px solid #90caf9; }
+    .diff-basis .diff-title { color: #0d47a1; }
+    .diff-vertiefung { background: #e8f5e9; border: 1.5px solid #a5d6a7; }
+    .diff-vertiefung .diff-title { color: #1b5e20; }
+    .diff-praxis { background: #fff3e0; border: 1.5px solid #ffcc80; }
+    .diff-praxis .diff-title { color: #e65100; }
+    .diff-box ul { padding-left: 16px; }
+    .diff-box li { margin-bottom: 4px; }
+
+    /* ===== QUESTIONS ===== */
+    .question-block {
+      background: white;
+      border: 1.5px solid var(--grey-border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      transition: border-color 0.3s;
+    }
+    .question-block.correct { border-color: var(--green-border); background: #f0fff0; }
+    .question-block.wrong { border-color: var(--red-border); background: #fff5f5; }
+    .question-num {
+      font-size: 9pt;
+      font-weight: 700;
+      color: var(--blue-mid);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .question-text {
+      font-size: 11pt;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 12px;
+    }
+    /* Radio / checkbox options */
+    .options-list { display: flex; flex-direction: column; gap: 8px; }
+    .option-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 12px;
+      border: 1.5px solid #ddd;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 10.5pt;
+    }
+    .option-label:hover { background: var(--blue-light); border-color: var(--blue-mid); }
+    .option-label input { margin-top: 3px; flex-shrink: 0; }
+    .option-label.selected-correct { background: #e8f5e9; border-color: var(--green-border); }
+    .option-label.selected-wrong { background: #fdecea; border-color: var(--red-border); }
+    .option-label.reveal-correct { background: #e8f5e9; border-color: var(--green-border); }
+    /* Gap fill */
+    .gap-input {
+      border: 2px solid var(--grey-border);
+      border-radius: 6px;
+      padding: 7px 12px;
+      font-family: inherit;
+      font-size: 11pt;
+      width: 100%;
+      max-width: 400px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .gap-input:focus { border-color: var(--blue-mid); }
+    .gap-input.correct { border-color: var(--green-border); background: #f0fff0; }
+    .gap-input.wrong { border-color: var(--red-border); background: #fff5f5; }
+    /* Feedback */
+    .q-feedback {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 10pt;
+      display: none;
+    }
+    .q-feedback.show { display: flex; gap: 8px; align-items: flex-start; }
+    .q-feedback.ok { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+    .q-feedback.err { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+    .check-btn {
+      margin-top: 10px;
+      padding: 7px 20px;
+      border-radius: 7px;
+      border: none;
+      font-family: inherit;
+      font-size: 10pt;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--blue-mid);
+      color: white;
+      transition: background 0.2s;
+    }
+    .check-btn:hover { background: var(--blue-dark); }
+    .check-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress-wrap {
+      background: #e0e6f5;
+      border-radius: 20px;
+      height: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue-mid), #66bb6a);
+      border-radius: 20px;
+      transition: width 0.4s;
+    }
+    .progress-label {
+      font-size: 9.5pt;
+      color: #666;
+      margin-bottom: 6px;
+      text-align: right;
+    }
+
+    /* ===== UNLOCK BOX ===== */
+    .unlock-box {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border: 2px solid var(--green-border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .unlock-box .unlock-icon { font-size: 30pt; margin-bottom: 8px; }
+    .unlock-box h3 { font-size: 14pt; color: var(--green); margin-bottom: 6px; }
+    .unlock-box .bzs {
+      font-size: 22pt;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin: 10px 0;
+    }
+    .unlock-box .bzs-label { font-size: 10pt; color: #555; }
+
+    /* ===== CALCULATION ===== */
+    .calc-step {
+      background: white;
+      border: 1.5px solid var(--grey-border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+    .calc-step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px; height: 28px;
+      background: var(--blue-mid);
+      color: white;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 10.5pt;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    .calc-step h3 {
+      font-size: 11pt;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .calc-input {
+      border: 2px solid var(--grey-border);
+      border-radius: 7px;
+      padding: 9px 14px;
+      font-family: inherit;
+      font-size: 11pt;
+      width: 180px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .calc-input:focus { border-color: var(--blue-mid); }
+    .calc-input.correct { border-color: var(--green-border); background: #f0fff0; }
+    .calc-input.wrong { border-color: var(--red-border); background: #fff5f5; }
+    .calc-input:disabled { background: #f0f0f0; color: #555; }
+    .input-unit { align-self: center; font-size: 10.5pt; color: #555; font-weight: 500; }
+    .hint-box {
+      background: var(--yellow-bg);
+      border: 1.5px solid var(--yellow);
+      border-radius: 7px;
+      padding: 8px 12px;
+      font-size: 10pt;
+      margin-top: 8px;
+      display: none;
+    }
+    .hint-box.show { display: block; }
+    .formula-box {
+      background: #f0f4ff;
+      border: 2px solid var(--blue-mid);
+      border-radius: 8px;
+      padding: 14px 18px;
+      text-align: center;
+      font-size: 13pt;
+      font-weight: 600;
+      color: var(--blue-dark);
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+    }
+    .formula-box .formula-sub { font-size: 9.5pt; color: #555; font-weight: 400; margin-top: 5px; }
+
+    /* ===== SUMMARY TABLE ===== */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+      font-size: 10.5pt;
+    }
+    .summary-table th {
+      background: var(--blue-dark);
+      color: white;
+      padding: 8px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .summary-table td {
+      padding: 7px 14px;
+      border-bottom: 1px solid #e0e6f0;
+    }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: #f7f9ff; }
+    .summary-table .total-row td {
+      font-weight: 700;
+      color: var(--blue-dark);
+      background: #e8edf8 !important;
+      font-size: 11pt;
+    }
+
+    /* ===== MAHNUNG / EMAIL EDITOR ===== */
+    .portal-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .sidebar {
+      background: white;
+      border: 1.5px solid var(--grey-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      position: sticky;
+      top: 80px;
+    }
+    .sidebar h3 {
+      font-size: 11pt;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin-bottom: 12px;
+      border-bottom: 2px solid var(--blue-light);
+      padding-bottom: 8px;
+    }
+    .sidebar .summary-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px dashed #e0e6f0;
+      font-size: 10pt;
+    }
+    .sidebar .summary-line:last-child { border-bottom: none; }
+    .sidebar .summary-line .s-label { color: #555; }
+    .sidebar .summary-line .s-value { font-weight: 700; color: var(--blue-dark); }
+    .sidebar .total-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0 4px 0;
+      margin-top: 6px;
+      border-top: 2px solid var(--blue-mid);
+      font-size: 11pt;
+      font-weight: 700;
+      color: var(--blue-dark);
+    }
+    .email-editor {
+      background: white;
+      border: 1.5px solid var(--grey-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .email-toolbar {
+      background: var(--blue-dark);
+      color: white;
+      padding: 10px 18px;
+      font-size: 10pt;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .email-field {
+      padding: 8px 18px;
+      border-bottom: 1px solid #e8edf8;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10pt;
+    }
+    .email-field label {
+      font-weight: 600;
+      color: var(--blue-dark);
+      min-width: 80px;
+      font-size: 10pt;
+    }
+    .email-field input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-family: inherit;
+      font-size: 10.5pt;
+      background: transparent;
+    }
+    .email-body { padding: 16px 18px; }
+    /* Baustein-Slots */
+    .slot-row {
+      margin-bottom: 12px;
+    }
+    .slot-label {
+      font-size: 9.5pt;
+      font-weight: 600;
+      color: var(--blue-dark);
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .slot-label .slot-num {
+      background: var(--blue-mid);
+      color: white;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9pt;
+      flex-shrink: 0;
+    }
+    .slot-select {
+      width: 100%;
+      border: 2px solid var(--grey-border);
+      border-radius: 7px;
+      padding: 8px 12px;
+      font-family: inherit;
+      font-size: 10pt;
+      outline: none;
+      background: white;
+      transition: border-color 0.2s;
+      cursor: pointer;
+    }
+    .slot-select:focus { border-color: var(--blue-mid); }
+    .slot-select.correct { border-color: var(--green-border); background: #f0fff0; }
+    .slot-select.wrong { border-color: var(--red-border); background: #fff5f5; }
+    .slot-feedback {
+      margin-top: 5px;
+      font-size: 9.5pt;
+      padding: 6px 10px;
+      border-radius: 5px;
+      display: none;
+    }
+    .slot-feedback.show { display: block; }
+    .slot-feedback.ok { background: var(--green-bg); color: var(--green); }
+    .slot-feedback.err { background: var(--red-bg); color: var(--red); }
+
+    /* ===== PRINT PREVIEW ===== */
+    .print-preview {
+      background: white;
+      border: 1.5px solid var(--grey-border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin-bottom: 20px;
+    }
+    .print-preview h2 { font-size: 14pt; color: var(--blue-dark); margin-bottom: 16px; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 700px) {
+      .portal-layout { grid-template-columns: 1fr; }
+      .diff-grid { grid-template-columns: 1fr; }
+      .info-grid { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+    }
+
+    /* ===== PRINT STYLES ===== */
+    @media print {
+      .top-nav, .btn, .btn-row, .check-btn,
+      .step-indicator, #section-start,
+      #section-gesetze, #section-fragen,
+      #section-berechnung, #section-mahnung,
+      .hint-box, .email-toolbar, .email-field input,
+      .slot-select { display: none !important; }
+
+      body { background: white; font-size: 11pt; }
+      .section { display: block !important; }
+      #section-print { display: block !important; }
+
+      .print-page {
+        width: 210mm;
+        padding: 15mm 18mm;
+        page-break-after: always;
+      }
+      .print-page:last-child { page-break-after: auto; }
+
+      .print-input-line {
+        border-bottom: 1px solid #333;
+        min-width: 80px;
+        display: inline-block;
+        height: 14px;
+      }
+
+      @page { size: A4 portrait; margin: 0; }
+
+      .law-card, .infobox, .summary-table,
+      .letter-block { page-break-inside: avoid; break-inside: avoid; }
+
+      .letter-page { page-break-before: always; break-before: page; }
+    }
+
+    /* Always-visible print section */
+    #section-print {
+      display: none;
+    }
+    #section-print.print-visible {
+      display: block;
+    }
+
+    /* ===== LETTER STYLING ===== */
+    .letter-block {
+      font-family: 'Outfit', Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.7;
+    }
+    .letter-block .letter-sender {
+      font-size: 9pt;
+      color: #555;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-bottom: 12px;
+    }
+    .letter-block .letter-recipient { margin-bottom: 20px; }
+    .letter-block .letter-date { text-align: right; margin-bottom: 16px; }
+    .letter-block .letter-betreff {
+      font-weight: 700;
+      margin-bottom: 14px;
+      font-size: 11.5pt;
+    }
+    .letter-block p { margin-bottom: 10px; }
+    .letter-block .letter-sig { margin-top: 24px; }
+
+    /* ===== COMPLETION ===== */
+    .success-banner {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border: 2px solid var(--green-border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      text-align: center;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .success-banner.show { display: block; }
+    .success-banner h3 { font-size: 16pt; color: var(--green); margin-bottom: 8px; }
+    .success-banner p { font-size: 10.5pt; color: #2e4a2e; }
+
+
+    /* ===== DRUCKVERSION / DIN-A4-FIX ===== */
+    #section-print.active { display: block !important; }
+
+    .print-tools {
+      background: var(--yellow-bg);
+      border-left: 4px solid var(--yellow);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      font-size: 10.5pt;
+    }
+    .print-tools-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .print-sheet {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto 22px auto;
+      padding: 13mm 15mm;
+      background: #fff;
+      border: 1px solid #d7deef;
+      box-shadow: 0 4px 18px rgba(15,45,107,0.15);
+      box-sizing: border-box;
+      page-break-after: always;
+      break-after: page;
+    }
+    .print-sheet:last-of-type {
+      page-break-after: auto;
+      break-after: auto;
+    }
+    .print-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      border-bottom: 2px solid #0f2d6b;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+    .print-kicker {
+      font-size: 8.8pt;
+      color: #68708a;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+    .print-title {
+      font-size: 17pt;
+      color: #0f2d6b;
+      margin: 2px 0 0 0;
+      line-height: 1.15;
+    }
+    .print-meta {
+      text-align: right;
+      font-size: 9.2pt;
+      color: #444;
+      white-space: nowrap;
+      line-height: 1.5;
+    }
+    .print-block {
+      border: 1.4px solid #c5d0e8;
+      border-radius: 8px;
+      padding: 9px 11px;
+      margin-bottom: 9px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .print-block h3 {
+      font-size: 10.8pt;
+      color: #0f2d6b;
+      margin: 0 0 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .print-block-blue { background: #f0f4ff; }
+    .print-block-green { background: #eef9ef; border-color: #a5d6a7; }
+    .print-block-yellow { background: #fffbe6; border-color: #f0d050; }
+    .print-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.8pt;
+    }
+    .print-table td,
+    .print-table th {
+      padding: 4px 6px;
+      border-bottom: 1px solid #e0e6f0;
+      vertical-align: top;
+    }
+    .print-table th {
+      background: #0f2d6b;
+      color: white;
+      text-align: left;
+      font-weight: 700;
+    }
+    .print-table tr:last-child td { border-bottom: none; }
+    .print-right { text-align: right; font-weight: 700; white-space: nowrap; }
+    .print-total td {
+      background: #e8edf8;
+      color: #0f2d6b;
+      font-weight: 700;
+      font-size: 10.5pt;
+    }
+    .print-formula {
+      background: white;
+      border: 2px solid #1a4a9e;
+      color: #0f2d6b;
+      border-radius: 8px;
+      padding: 8px 10px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 11pt;
+      margin: 6px 0 8px 0;
+    }
+    .print-law-list,
+    .print-check-list {
+      padding-left: 18px;
+      font-size: 9.8pt;
+      line-height: 1.55;
+      margin: 0;
+    }
+    .print-law-list li,
+    .print-check-list li { margin-bottom: 3px; }
+    .print-letter {
+      font-size: 10.6pt;
+      line-height: 1.55;
+      color: #1a1a2e;
+    }
+    .print-letter-sender {
+      font-size: 8.5pt;
+      color: #666;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 4px;
+      margin-bottom: 12px;
+    }
+    .print-letter-recipient { margin-bottom: 16px; }
+    .print-letter-date { text-align: right; margin-bottom: 14px; }
+    .print-letter-subject {
+      font-weight: 700;
+      margin-bottom: 13px;
+      font-size: 11.2pt;
+    }
+    .print-letter p { margin: 0 0 9px 0; }
+    .print-signature { margin-top: 22px; }
+
+    @media print {
+      body { background: white !important; margin: 0 !important; padding: 0 !important; }
+      .top-nav, .btn, .btn-row, .check-btn, .step-indicator, .print-tools { display: none !important; }
+      .section { display: none !important; }
+      #section-print { display: block !important; }
+      #section-print .container {
+        max-width: none !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .print-sheet {
+        width: 210mm !important;
+        height: 297mm !important;
+        min-height: 297mm !important;
+        margin: 0 !important;
+        padding: 12mm 14mm !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        overflow: hidden !important;
+        page-break-after: always !important;
+        break-after: page !important;
+      }
+      .print-sheet:last-of-type {
+        page-break-after: auto !important;
+        break-after: auto !important;
+      }
+      @page { size: A4 portrait; margin: 0; }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- ===== TOP NAVIGATION ===== -->
+<nav class="top-nav">
+  <div class="brand">Schulz Office GmbH <span>· Firmeninternes Informationsportal</span></div>
+  <div class="step-indicator">
+    <div class="step-dot active" id="dot-1"></div>
+    <div class="step-dot" id="dot-2"></div>
+    <div class="step-dot" id="dot-3"></div>
+    <div class="step-dot" id="dot-4"></div>
+    <div class="step-dot" id="dot-5"></div>
+    <div class="step-dot" id="dot-6"></div>
+  </div>
+</nav>
+
+<!-- ===================================================
+     SECTION 1: STARTSEITE
+     =================================================== -->
+<div class="section active" id="section-start">
+<div class="container">
+
+  <div class="start-hero">
+    <div style="font-size:36pt; margin-bottom:8px;">⚖️</div>
+    <h1>Zahlungsverzug im B2B prüfen</h1>
+    <div class="subtitle">Firmeninternes Informationsportal · Schulz Office GmbH</div>
+    <div class="badge">🔄 Perspektive: Wir sind heute der Verkäufer</div>
+    <p style="font-size:11pt; opacity:0.9; max-width:560px; margin:0 auto;">
+      Heute prüfst du, ob sich unser Kunde im Zahlungsverzug befindet und welche Forderung wir geltend machen dürfen.
+    </p>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-tile">
+      <div class="tile-title">📋 Unser Fall</div>
+      <strong>Schulz Office GmbH</strong> hat der <strong>Braun &amp; Partner OHG</strong> am 30.04.2026 eine Rechnung über <strong>2.400,00 €</strong> gestellt. Zahlungsziel: <strong>15.05.2026</strong>. Stand heute (10.06.2026): keine Zahlung.
+    </div>
+    <div class="info-tile">
+      <div class="tile-title">🎯 Das machst du heute</div>
+      <ul style="padding-left:16px; line-height:1.8; font-size:10.5pt;">
+        <li>Rechtliche Grundlagen kennenlernen</li>
+        <li>Verständnisfragen beantworten</li>
+        <li>Verzugszinsen berechnen</li>
+        <li>Mahnung schreiben</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="infobox infobox-yellow" style="margin-bottom:24px;">
+    <div class="infobox-title">⚠️ Wichtiger Hinweis</div>
+    In dieser Einheit geht es <strong>nicht</strong> um Mängel oder verspätete Lieferung – das kennst du bereits. Heute konzentrierst du dich ausschließlich auf den <strong>Zahlungsverzug des Käufers</strong>.
+  </div>
+
+  <div style="text-align:center;">
+    <button class="btn btn-primary" onclick="showSection('section-gesetze', 1)">
+      ▶ Prüfung starten
+    </button>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================================================
+     SECTION 2: RECHTLICHE GRUNDLAGEN
+     =================================================== -->
+<div class="section" id="section-gesetze">
+<div class="container">
+
+  <div class="card">
+    <div class="card-header"><span class="icon">📖</span> Rechtliche Grundlagen: Zahlungsverzug</div>
+
+    <!-- § 286 BGB -->
+    <div class="law-card">
+      <div class="law-header">§ 286 Abs. 3 BGB – Verzug bei Entgeltforderungen</div>
+      <div class="law-body">
+        <div class="law-original">
+          „Der Schuldner einer Entgeltforderung kommt spätestens in Verzug, wenn er nicht innerhalb von 30 Tagen nach Fälligkeit und Zugang einer Rechnung oder gleichwertigen Zahlungsaufstellung leistet …"
+          <br><em>(vereinfacht, maßgeblich ist der Gesetzestext)</em>
+        </div>
+        <div class="law-erklaerung">
+          <p><strong>Was bedeutet das?</strong></p>
+          <p>Eine <strong>Entgeltforderung</strong> entsteht, wenn jemand für eine Leistung Geld zahlen muss – zum Beispiel aus einem Kaufvertrag (§ 433 BGB). Wenn eine Rechnung gestellt wurde und das Zahlungsziel abgelaufen ist, kommt der Schuldner in Verzug.</p>
+          <p style="margin-top:8px;">Im <strong>B2B-Bereich</strong> (Unternehmen handeln mit Unternehmen) gilt: Ohne besondere Vereinbarung tritt Verzug automatisch ein, wenn nach 30 Tagen ab Fälligkeit und Rechnungszugang nicht gezahlt wurde – <em>ohne dass eine Mahnung nötig wäre</em>.</p>
+          <p style="margin-top:8px;">Wurde ein <strong>Zahlungsziel</strong> vereinbart (z. B. „zahlbar bis 15.05.2026"), beginnt der Verzug am Tag nach Ablauf dieses Ziels.</p>
+        </div>
+        <div class="law-merksatz">✅ Merksatz: Im B2B-Geschäft gerät ein Unternehmen spätestens 30 Tage nach Fälligkeit und Rechnungszugang automatisch in Verzug – auch ohne Mahnung.</div>
+      </div>
+    </div>
+
+    <!-- § 288 Abs. 2 BGB -->
+    <div class="law-card">
+      <div class="law-header">§ 288 Abs. 2 BGB – Verzugszinsen im B2B</div>
+      <div class="law-body">
+        <div class="law-original">
+          „Bei Rechtsgeschäften, an denen ein Verbraucher nicht beteiligt ist, beträgt der Zinssatz für Entgeltforderungen neun Prozentpunkte über dem Basiszinssatz."
+        </div>
+        <div class="law-erklaerung">
+          <p><strong>Was bedeutet das?</strong></p>
+          <p>Im B2B-Bereich – also wenn kein Verbraucher beteiligt ist – kann der Gläubiger (derjenige, dem Geld geschuldet wird) <strong>Verzugszinsen</strong> verlangen. Diese sind deutlich höher als im B2C-Bereich.</p>
+          <p style="margin-top:8px;"><strong>Der Verzugszinssatz berechnet sich so:</strong><br>
+          Basiszinssatz + <strong>9 Prozentpunkte</strong></p>
+          <p style="margin-top:8px;">Der <strong>Basiszinssatz</strong> wird von der Deutschen Bundesbank festgelegt und ändert sich halbjährlich. Er wird dir im nächsten Schritt angezeigt.</p>
+        </div>
+        <div class="law-merksatz">✅ Merksatz: B2B-Verzugszinssatz = Basiszinssatz + 9 Prozentpunkte</div>
+      </div>
+    </div>
+
+    <!-- § 288 Abs. 5 BGB -->
+    <div class="law-card">
+      <div class="law-header">§ 288 Abs. 5 BGB – 40-Euro-Kostenpauschale</div>
+      <div class="law-body">
+        <div class="law-original">
+          „Der Gläubiger einer Entgeltforderung hat bei Verzug des Schuldners, wenn dieser kein Verbraucher ist, außerdem einen Anspruch auf Zahlung eines Pauschalbetrages in Höhe von 40 Euro."
+        </div>
+        <div class="law-erklaerung">
+          <p><strong>Was bedeutet das?</strong></p>
+          <p>Zusätzlich zu den Verzugszinsen kann der Gläubiger im B2B-Verzug eine <strong>Pauschale von 40,00 €</strong> verlangen. Diese Pauschale soll die Kosten abdecken, die durch die Beitreibung der Forderung entstehen (z. B. Aufwand für Mahnschreiben, Buchführung).</p>
+          <p style="margin-top:8px;">Diese Pauschale steht dem Gläubiger zu, <em>sobald der Schuldner in Verzug geraten ist</em> – ganz unabhängig davon, wie hoch die tatsächlichen Kosten sind.</p>
+        </div>
+        <div class="law-merksatz">✅ Merksatz: Im B2B-Verzug kannst du zusätzlich zu den Zinsen immer 40,00 € Kostenpauschale verlangen.</div>
+      </div>
+    </div>
+
+    <!-- Differenzierungsboxen -->
+    <div class="infobox infobox-blue" style="margin-top:8px;">
+      <div class="infobox-title">🌐 Hintergrundwissen: Wann ist eine Rechnung fällig?</div>
+    </div>
+
+    <div class="diff-grid">
+      <div class="diff-box diff-basis">
+        <div class="diff-title">📚 Das musst du sicher wissen</div>
+        <ul>
+          <li>Eine Rechnung ist fällig, sobald sie gestellt und zugestellt wurde – es sei denn, es wurde ein späteres Zahlungsziel vereinbart.</li>
+          <li>Wurde ein Zahlungsziel vereinbart (z.B. „15.05.2026"), dann ist die Rechnung an diesem Tag fällig.</li>
+          <li>Der erste Verzugstag ist der Tag <strong>nach</strong> Ablauf des Zahlungsziels.</li>
+        </ul>
+      </div>
+      <div class="diff-box diff-vertiefung">
+        <div class="diff-title">🏢 Im B2B besonders wichtig</div>
+        <ul>
+          <li>Im B2B-Geschäft gilt die <strong>30-Tage-Regelung</strong>: Auch ohne vereinbartes Zahlungsziel tritt Verzug spätestens nach 30 Tagen ein.</li>
+          <li>B2C (Verbraucher) und B2B werden unterschiedlich behandelt: Bei Verbrauchern ist ein ausdrücklicher Hinweis auf die 30-Tage-Regel nötig – bei Unternehmen nicht.</li>
+          <li>Für unseren Fall gilt: Das Zahlungsziel (15.05.2026) wurde vereinbart, daher tritt Verzug am 16.05.2026 ein.</li>
+        </ul>
+      </div>
+      <div class="diff-box diff-praxis">
+        <div class="diff-title">🔧 So geht ein Unternehmen vor</div>
+        <ul>
+          <li><strong>Schritt 1:</strong> Fälligkeit prüfen – ist das Zahlungsziel abgelaufen?</li>
+          <li><strong>Schritt 2:</strong> Verzugstage zählen (ab dem Tag nach Ablauf des Zahlungsziels)</li>
+          <li><strong>Schritt 3:</strong> Verzugszinsen und 40-€-Pauschale berechnen</li>
+          <li><strong>Schritt 4:</strong> Mahnung mit neuer Gesamtforderung und angemessener Zahlungsfrist versenden</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="showSection('section-start', -1)">← Zurück</button>
+    <button class="btn btn-primary" onclick="showSection('section-fragen', 2)">Weiter zu den Verständnisfragen →</button>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================================================
+     SECTION 3: VERSTÄNDNISFRAGEN
+     =================================================== -->
+<div class="section" id="section-fragen">
+<div class="container">
+
+  <div class="card">
+    <div class="card-header"><span class="icon">❓</span> Verständnisfragen</div>
+    <p style="margin-bottom:16px; font-size:10.5pt;">Beantworte alle Fragen korrekt, um den Basiszinssatz freizuschalten. Du kannst falsch beantwortete Fragen wiederholen.</p>
+
+    <div class="progress-label" id="progress-label">0 von 6 Fragen richtig</div>
+    <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+
+    <!-- FRAGE 1: Multiple Choice -->
+    <div class="question-block" id="q1">
+      <div class="question-num">Frage 1 von 6 – Multiple Choice</div>
+      <div class="question-text">Was ist eine Entgeltforderung?</div>
+      <div class="options-list" id="q1-options">
+        <label class="option-label"><input type="radio" name="q1" value="a"> Ein Anspruch auf eine Warenlieferung</label>
+        <label class="option-label"><input type="radio" name="q1" value="b"> Ein Anspruch auf Geldzahlung für eine erbrachte Leistung</label>
+        <label class="option-label"><input type="radio" name="q1" value="c"> Eine Strafe für verspätete Lieferung</label>
+        <label class="option-label"><input type="radio" name="q1" value="d"> Ein Anspruch auf Schadensersatz</label>
+      </div>
+      <button class="check-btn" onclick="checkMC('q1','b','Eine Entgeltforderung ist ein Geldanspruch – zum Beispiel der Kaufpreis aus einem Kaufvertrag (§ 433 BGB).')">Antwort prüfen</button>
+      <div class="q-feedback" id="q1-fb"></div>
+    </div>
+
+    <!-- FRAGE 2: Multiple Choice -->
+    <div class="question-block" id="q2">
+      <div class="question-num">Frage 2 von 6 – Wahr oder Falsch</div>
+      <div class="question-text">„Im B2B-Bereich muss ein Unternehmen eine Mahnung erhalten, bevor es in Verzug geraten kann."</div>
+      <div class="options-list" id="q2-options">
+        <label class="option-label"><input type="radio" name="q2" value="a"> Wahr – eine Mahnung ist immer erforderlich</label>
+        <label class="option-label"><input type="radio" name="q2" value="b"> Falsch – im B2B-Bereich tritt Verzug nach § 286 Abs. 3 BGB automatisch nach 30 Tagen ein</label>
+      </div>
+      <button class="check-btn" onclick="checkMC('q2','b','Richtig! Im B2B tritt Verzug automatisch nach 30 Tagen ein – ohne Mahnung (§ 286 Abs. 3 BGB).')">Antwort prüfen</button>
+      <div class="q-feedback" id="q2-fb"></div>
+    </div>
+
+    <!-- FRAGE 3: Lückentext -->
+    <div class="question-block" id="q3">
+      <div class="question-num">Frage 3 von 6 – Lückentext</div>
+      <div class="question-text">Ergänze den Merksatz: Im B2B-Verzug berechnet sich der Verzugszinssatz aus dem Basiszinssatz + <span style="color:var(--blue-mid)">___ Prozentpunkte</span>.</div>
+      <div class="input-row">
+        <input type="number" class="gap-input" id="q3-input" placeholder="Zahl eingeben …" min="0" max="20" step="1" style="max-width:200px;">
+        <span class="input-unit">Prozentpunkte</span>
+      </div>
+      <button class="check-btn" onclick="checkGap('q3', '9', '9', 'Richtig! § 288 Abs. 2 BGB: Basiszinssatz + 9 Prozentpunkte.')">Antwort prüfen</button>
+      <div class="q-feedback" id="q3-fb"></div>
+    </div>
+
+    <!-- FRAGE 4: Multiple Choice -->
+    <div class="question-block" id="q4">
+      <div class="question-num">Frage 4 von 6 – Multiple Choice</div>
+      <div class="question-text">Welcher Paragraph des BGB regelt die Verzugszinsen im B2B-Bereich?</div>
+      <div class="options-list" id="q4-options">
+        <label class="option-label"><input type="radio" name="q4" value="a"> § 286 Abs. 3 BGB</label>
+        <label class="option-label"><input type="radio" name="q4" value="b"> § 433 BGB</label>
+        <label class="option-label"><input type="radio" name="q4" value="c"> § 288 Abs. 2 BGB</label>
+        <label class="option-label"><input type="radio" name="q4" value="d"> § 323 BGB</label>
+      </div>
+      <button class="check-btn" onclick="checkMC('q4','c','§ 288 Abs. 2 BGB regelt die Verzugszinsen bei Entgeltforderungen ohne Verbraucherbeteiligung.')">Antwort prüfen</button>
+      <div class="q-feedback" id="q4-fb"></div>
+    </div>
+
+    <!-- FRAGE 5: Multiple Choice -->
+    <div class="question-block" id="q5">
+      <div class="question-num">Frage 5 von 6 – Multiple Choice</div>
+      <div class="question-text">Welche zusätzliche Pauschale kann im B2B-Verzug verlangt werden?</div>
+      <div class="options-list" id="q5-options">
+        <label class="option-label"><input type="radio" name="q5" value="a"> 10,00 €</label>
+        <label class="option-label"><input type="radio" name="q5" value="b"> 25,00 €</label>
+        <label class="option-label"><input type="radio" name="q5" value="c"> 40,00 €</label>
+        <label class="option-label"><input type="radio" name="q5" value="d"> 100,00 €</label>
+      </div>
+      <button class="check-btn" onclick="checkMC('q5','c','Richtig! § 288 Abs. 5 BGB: Im B2B-Verzug können 40,00 € Kostenpauschale verlangt werden.')">Antwort prüfen</button>
+      <div class="q-feedback" id="q5-fb"></div>
+    </div>
+
+    <!-- FRAGE 6: Zuordnung als MC -->
+    <div class="question-block" id="q6">
+      <div class="question-num">Frage 6 von 6 – Zuordnung</div>
+      <div class="question-text">Was beschreibt B2B richtig?</div>
+      <div class="options-list" id="q6-options">
+        <label class="option-label"><input type="radio" name="q6" value="a"> Ein Unternehmen verkauft an eine Privatperson</label>
+        <label class="option-label"><input type="radio" name="q6" value="b"> Ein Unternehmen kauft von einem anderen Unternehmen</label>
+        <label class="option-label"><input type="radio" name="q6" value="c"> Eine Bank verleiht Geld an ein Unternehmen</label>
+        <label class="option-label"><input type="radio" name="q6" value="d"> Zwei Privatpersonen handeln miteinander</label>
+      </div>
+      <button class="check-btn" onclick="checkMC('q6','b','B2B = Business to Business: Zwei Unternehmen handeln miteinander. Das Gegenteil ist B2C (Business to Consumer = Unternehmen an Privatperson).')">Antwort prüfen</button>
+      <div class="q-feedback" id="q6-fb"></div>
+    </div>
+
+    <div id="unlock-hint" style="display:none;" class="infobox infobox-green">
+      <div class="infobox-title">🎉 Alle Fragen richtig beantwortet!</div>
+      Du kannst jetzt mit der Berechnung weitermachen.
+    </div>
+
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="showSection('section-gesetze', 1)">← Zurück</button>
+    <button class="btn btn-primary" id="btn-to-basiszins" onclick="showSection('section-basiszins', 3)" disabled>
+      Basiszinssatz freischalten →
+    </button>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================================================
+     SECTION 4: BASISZINSSATZ + BERECHNUNG
+     =================================================== -->
+<div class="section" id="section-basiszins">
+<div class="container">
+
+  <div class="unlock-box">
+    <div class="unlock-icon">🔓</div>
+    <h3>Gut gemacht! Du kannst nun mit der Berechnung beginnen.</h3>
+    <div class="bzs-label">Aktueller Basiszinssatz für diese Aufgabe:</div>
+    <div class="bzs" id="display-bzs">1,27 %</div>
+    <div class="bzs-label">B2B-Verzugszinssatz = Basiszinssatz + 9 Prozentpunkte</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🧮</span> Verzugszinsen berechnen</div>
+
+    <div class="formula-box">
+      Verzugszinsen = Rechnungsbetrag × Verzugszinssatz × Verzugstage ÷ 365
+      <div class="formula-sub">Ergebnis auf 2 Nachkommastellen runden</div>
+    </div>
+
+    <!-- Schritt 1: Rechnungsbetrag -->
+    <div class="calc-step" id="cs1">
+      <h3><span class="calc-step-num">1</span> Rechnungsbetrag</h3>
+      <p style="font-size:10.5pt; margin-bottom:10px;">Wie hoch ist der offene Rechnungsbetrag der Braun &amp; Partner OHG?</p>
+      <div class="input-row">
+        <input type="number" class="calc-input" id="inp-betrag" placeholder="Betrag eingeben" step="0.01" oninput="checkBetrag()">
+        <span class="input-unit">€</span>
+      </div>
+      <div class="hint-box" id="hint-betrag">Tipp: Nutze den offenen Rechnungsbetrag aus der Rechnung SO-2026-0487.</div>
+      <div class="q-feedback" id="fb-betrag"></div>
+    </div>
+
+    <!-- Schritt 2: Verzugstage -->
+    <div class="calc-step" id="cs2">
+      <h3><span class="calc-step-num">2</span> Verzugstage</h3>
+      <p style="font-size:10.5pt; margin-bottom:6px;">Wie viele Tage befindet sich die Rechnung im Verzug?</p>
+      <div class="input-row">
+        <input type="number" class="calc-input" id="inp-tage" placeholder="Tage" min="1" max="365" oninput="checkTage()">
+        <span class="input-unit">Tage</span>
+      </div>
+      <div class="hint-box" id="hint-tage">Tipp: Der erste Verzugstag ist der Tag nach Ablauf des Zahlungsziels. Zähle bis einschließlich Bearbeitungsdatum.</div>
+      <div class="q-feedback" id="fb-tage"></div>
+    </div>
+
+    <!-- Schritt 3: Verzugszinssatz -->
+    <div class="calc-step" id="cs3">
+      <h3><span class="calc-step-num">3</span> Verzugszinssatz im B2B</h3>
+      <p style="font-size:10.5pt; margin-bottom:10px;">Wie hoch ist der Verzugszinssatz im B2B? (Basiszinssatz 1,27 % + 9 Prozentpunkte)</p>
+      <div class="input-row">
+        <input type="number" class="calc-input" id="inp-zinssatz" placeholder="Zinssatz eingeben" step="0.01" oninput="checkZinssatz()">
+        <span class="input-unit">%</span>
+      </div>
+      <div class="hint-box" id="hint-zinssatz">Tipp: Addiere den Basiszinssatz und 9 Prozentpunkte. Schreibe das Ergebnis als Prozentwert.</div>
+      <div class="q-feedback" id="fb-zinssatz"></div>
+    </div>
+
+    <!-- Schritt 4: Verzugszinsen berechnen -->
+    <div class="calc-step" id="cs4">
+      <h3><span class="calc-step-num">4</span> Verzugszinsen berechnen</h3>
+      <p style="font-size:10.5pt; margin-bottom:6px;">Berechne die Verzugszinsen mit der Formel:</p>
+      <p style="font-size:10.5pt; margin-bottom:10px; color:#555;">
+        Nutze deine Ergebnisse aus Schritt 1 bis 3 und setze sie in die Formel ein.
+      </p>
+      <div class="input-row">
+        <input type="number" class="calc-input" id="inp-zinsen" placeholder="Zinsen eingeben" step="0.01" oninput="checkZinsen()">
+        <span class="input-unit">€</span>
+      </div>
+      <div class="hint-box" id="hint-zinsen">Tipp: Wandle den Prozentwert in eine Dezimalzahl um und rechne dann mit Rechnungsbetrag × Zinssatz × Verzugstage ÷ 365. Runde auf zwei Nachkommastellen.</div>
+      <div class="q-feedback" id="fb-zinsen"></div>
+    </div>
+
+    <!-- Schritt 5: 40-Euro-Pauschale -->
+    <div class="calc-step" id="cs5">
+      <h3><span class="calc-step-num">5</span> Kostenpauschale nach § 288 Abs. 5 BGB</h3>
+      <p style="font-size:10.5pt; margin-bottom:10px;">Welche Kostenpauschale darf im B2B-Verzug zusätzlich verlangt werden?</p>
+      <div class="options-list" id="pauschale-options" style="max-width:340px;">
+        <label class="option-label"><input type="radio" name="pauschale" value="10"> 10,00 €</label>
+        <label class="option-label"><input type="radio" name="pauschale" value="25"> 25,00 €</label>
+        <label class="option-label"><input type="radio" name="pauschale" value="40"> 40,00 €</label>
+        <label class="option-label"><input type="radio" name="pauschale" value="100"> 100,00 €</label>
+      </div>
+      <button class="check-btn" onclick="checkPauschale()">Antwort prüfen</button>
+      <div class="q-feedback" id="fb-pauschale"></div>
+    </div>
+
+    <!-- Schritt 6: Gesamtforderung -->
+    <div class="calc-step" id="cs6">
+      <h3><span class="calc-step-num">6</span> Neue Gesamtforderung</h3>
+      <p style="font-size:10.5pt; margin-bottom:6px;">Wie hoch ist die neue Gesamtforderung? (Rechnungsbetrag + Verzugszinsen + 40-€-Pauschale)</p>
+      <p style="font-size:10.5pt; margin-bottom:10px; color:#555;">
+        Addiere den Rechnungsbetrag, deine berechneten Verzugszinsen und die 40-Euro-Kostenpauschale.
+      </p>
+      <div class="input-row">
+        <input type="number" class="calc-input" id="inp-gesamt" placeholder="Gesamtforderung eingeben" step="0.01" oninput="checkGesamt()">
+        <span class="input-unit">€</span>
+      </div>
+      <div class="hint-box" id="hint-gesamt">Tipp: Gesamtforderung = Rechnungsbetrag + Verzugszinsen + gesetzliche Kostenpauschale.</div>
+      <div class="q-feedback" id="fb-gesamt"></div>
+    </div>
+
+    <!-- Ergebnis-Zusammenfassung -->
+    <div id="summary-section" style="display:none;">
+      <div class="infobox infobox-green" style="margin-bottom:16px;">
+        <div class="infobox-title">✅ Berechnung abgeschlossen!</div>
+        Hier ist deine Zusammenfassung:
+      </div>
+      <table class="summary-table" id="result-table">
+        <thead>
+          <tr><th>Position</th><th style="text-align:right;">Betrag</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Offener Rechnungsbetrag</td><td style="text-align:right;">2.400,00 €</td></tr>
+          <tr><td>Basiszinssatz</td><td style="text-align:right;">1,27 %</td></tr>
+          <tr><td>B2B-Verzugszinssatz (Basis + 9 PP)</td><td style="text-align:right;">10,27 %</td></tr>
+          <tr><td>Verzugstage (16.05.–10.06.2026)</td><td style="text-align:right;">26 Tage</td></tr>
+          <tr><td>Verzugszinsen</td><td style="text-align:right;">17,55 €</td></tr>
+          <tr><td>Kostenpauschale (§ 288 Abs. 5 BGB)</td><td style="text-align:right;">40,00 €</td></tr>
+          <tr class="total-row"><td>Neue Gesamtforderung</td><td style="text-align:right;">2.457,55 €</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="showSection('section-fragen', 2)">← Zurück</button>
+    <button class="btn btn-success" id="btn-to-mahnung" onclick="showSection('section-mahnung', 4)" disabled>
+      Weiter zum E-Mail-Postfach →
+    </button>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================================================
+     SECTION 5: MAHNUNG SCHREIBEN
+     =================================================== -->
+<div class="section" id="section-mahnung">
+<div class="container">
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-header"><span class="icon">✉️</span> E-Mail-Postfach – Mahnung schreiben</div>
+    <p style="font-size:10.5pt; margin-bottom:0;">Wähle für jeden Abschnitt den passenden Textbaustein aus. Achte auf die richtige Reihenfolge und sachliche Formulierung!</p>
+  </div>
+
+  <div class="portal-layout">
+
+    <!-- SIDEBAR: Berechnungsergebnisse -->
+    <div class="sidebar">
+      <h3>📊 Unsere Berechnung</h3>
+      <div class="summary-line"><span class="s-label">Rechnungsbetrag</span><span class="s-value">2.400,00 €</span></div>
+      <div class="summary-line"><span class="s-label">Verzugszinssatz</span><span class="s-value">10,27 %</span></div>
+      <div class="summary-line"><span class="s-label">Verzugstage</span><span class="s-value">26 Tage</span></div>
+      <div class="summary-line"><span class="s-label">Verzugszinsen</span><span class="s-value">17,55 €</span></div>
+      <div class="summary-line"><span class="s-label">40-€-Pauschale</span><span class="s-value">40,00 €</span></div>
+      <div class="total-line"><span>Gesamt</span><span>2.457,55 €</span></div>
+      <div style="margin-top:12px; font-size:9pt; color:#888; border-top:1px dashed #ddd; padding-top:8px;">
+        Zahlungsfrist: bis 20.06.2026<br>
+        Rechnungsnr.: SO-2026-0487
+      </div>
+    </div>
+
+    <!-- E-MAIL-EDITOR -->
+    <div class="email-editor">
+      <div class="email-toolbar">✉️ Neue E-Mail verfassen – Mahnung</div>
+
+      <div class="email-field">
+        <label>An:</label>
+        <input type="text" value="buchhaltung@braun-partner.de" readonly style="color:#333;">
+      </div>
+      <div class="email-field">
+        <label>Betreff:</label>
+        <input type="text" id="betreff-input" placeholder="Betreff eingeben …" oninput="checkBetreff()">
+      </div>
+      <div id="betreff-fb" style="padding:0 18px; font-size:9.5pt; display:none;"></div>
+
+      <div class="email-body">
+        <p style="font-size:10pt; color:#555; margin-bottom:14px;">
+          Wähle für jeden Abschnitt der Mahnung den <strong>richtigen Baustein</strong> aus dem Dropdown-Menü.
+        </p>
+
+        <!-- Slot 1: Anrede -->
+        <div class="slot-row">
+          <div class="slot-label"><span class="slot-num">1</span> Anrede</div>
+          <select class="slot-select" id="slot1" onchange="checkSlot(1)">
+            <option value="">– Baustein auswählen –</option>
+            <option value="wrong">Hey du,</option>
+            <option value="correct">Sehr geehrte Damen und Herren,</option>
+            <option value="wrong">Liebes Unternehmen,</option>
+            <option value="wrong">Hallo Braun-Leute,</option>
+          </select>
+          <div class="slot-feedback" id="sfb1"></div>
+        </div>
+
+        <!-- Slot 2: Bezug zur Rechnung -->
+        <div class="slot-row">
+          <div class="slot-label"><span class="slot-num">2</span> Bezug zur Rechnung</div>
+          <select class="slot-select" id="slot2" onchange="checkSlot(2)">
+            <option value="">– Baustein auswählen –</option>
+            <option value="wrong">Wir haben Ihnen leider schlechte Ware geliefert.</option>
+            <option value="correct">Zu unserer Rechnung Nr. SO-2026-0487 vom 30.04.2026 konnten wir bisher keinen Zahlungseingang feststellen.</option>
+            <option value="wrong">Sie haben uns absichtlich nicht bezahlt.</option>
+            <option value="wrong">Wir möchten unsere Preise erhöhen.</option>
+          </select>
+          <div class="slot-feedback" id="sfb2"></div>
+        </div>
+
+        <!-- Slot 3: Zahlungsziel -->
+        <div class="slot-row">
+          <div class="slot-label"><span class="slot-num">3</span> Hinweis auf abgelaufenes Zahlungsziel</div>
+          <select class="slot-select" id="slot3" onchange="checkSlot(3)">
+            <option value="">– Baustein auswählen –</option>
+            <option value="wrong">Die Lieferung war leider verspätet.</option>
+            <option value="wrong">Wir haben eine neue Zahlungsvereinbarung getroffen.</option>
+            <option value="correct">Das vereinbarte Zahlungsziel lief am 15.05.2026 ab. Bis heute ist die Zahlung nicht eingegangen.</option>
+            <option value="wrong">Wir liefern Ihnen keine Waren mehr.</option>
+          </select>
+          <div class="slot-feedback" id="sfb3"></div>
+        </div>
+
+        <!-- Slot 4: Verzug -->
+        <div class="slot-row">
+          <div class="slot-label"><span class="slot-num">4</span> Hinweis auf Zahlungsverzug</div>
+          <select class="slot-select" id="slot4" onchange="checkSlot(4)">
+            <option value="">– Baustein auswählen –</option>
+            <option value="wrong">Sie müssen sofort heute zahlen, sonst verklagen wir Sie.</option>
+            <option value="correct">Damit befindet sich die Zahlung gemäß § 286 Abs. 3 BGB im Verzug.</option>
+            <option value="wrong">Die Ware war mangelhaft und wir treten vom Kaufvertrag zurück.</option>
+            <option value="wrong">Wir sind sehr enttäuscht von Ihnen.</option>
+          </select>
+          <div class="slot-feedback" id="sfb4"></div>
+        </div>
+
+        <!-- Slot 5: Neue Forderung -->
+        <div class="slot-row">
+          <div class="slot-label"><span class="slot-num">5</span> Nennung der neuen Gesamtforderung</div>
+          <select class="slot-select" id="slot5" onchange="checkSlot(5)">
+            <option value="">– Baustein auswählen –</option>
+            <option value="wrong">Die Ware kostet jetzt mehr wegen der Inflation.</option>
+            <option value="wrong">Wir verlangen 5.000,00 € als Strafe.</option>
+            <option value="correct">Die Forderung setzt sich zusammen aus dem Rechnungsbetrag (2.400,00 €), Verzugszinsen (17,55 €) und der gesetzlichen Kostenpauschale nach § 288 Abs. 5 BGB (40,00 €). Der neue Gesamtbetrag beläuft sich auf 2.457,55 €.</option>
+            <option value="wrong">Bitte zahlen Sie einfach irgendwann.</option>
+          </select>
+          <div class="slot-feedback" id="sfb5"></div>
+        </div>
+
+        <!-- Slot 6: Zahlungsfrist -->
+        <div class="slot-row">
+          <div class="slot-label"><span class="slot-num">6</span> Neue Zahlungsfrist</div>
+          <select class="slot-select" id="slot6" onchange="checkSlot(6)">
+            <option value="">– Baustein auswählen –</option>
+            <option value="wrong">Zahlen Sie bis Ende des Jahres.</option>
+            <option value="correct">Bitte überweisen Sie den Gesamtbetrag von 2.457,55 € bis spätestens 20.06.2026 auf unser Konto.</option>
+            <option value="wrong">Wir erwarten die Zahlung irgendwann in den nächsten Monaten.</option>
+          </select>
+          <div class="slot-feedback" id="sfb6"></div>
+        </div>
+
+        <!-- Slot 7: Weitere Schritte -->
+        <div class="slot-row">
+          <div class="slot-label"><span class="slot-num">7</span> Hinweis auf weitere Schritte</div>
+          <select class="slot-select" id="slot7" onchange="checkSlot(7)">
+            <option value="">– Baustein auswählen –</option>
+            <option value="wrong">Wenn Sie nicht zahlen, kommen wir persönlich vorbei.</option>
+            <option value="wrong">Wir werden Sie sofort anzeigen.</option>
+            <option value="correct">Bei ausbleibender Zahlung bis zu diesem Datum behalten wir uns vor, weitere rechtliche Schritte einzuleiten.</option>
+            <option value="wrong">Wir hoffen, dass Sie irgendwann zahlen werden.</option>
+          </select>
+          <div class="slot-feedback" id="sfb7"></div>
+        </div>
+
+        <!-- Slot 8: Grußformel -->
+        <div class="slot-row">
+          <div class="slot-label"><span class="slot-num">8</span> Grußformel &amp; Unterschrift</div>
+          <select class="slot-select" id="slot8" onchange="checkSlot(8)">
+            <option value="">– Baustein auswählen –</option>
+            <option value="wrong">Tschüss!</option>
+            <option value="wrong">Bis dann!</option>
+            <option value="correct">Mit freundlichen Grüßen, Thomas Schulz – Schulz Office GmbH</option>
+            <option value="wrong">Ich hoffe, wir hören voneinander.</option>
+          </select>
+          <div class="slot-feedback" id="sfb8"></div>
+        </div>
+
+        <!-- Gesamtfeedback -->
+        <div id="mahnung-gesamt-fb" style="margin-top:16px; display:none;"></div>
+
+        <!-- Absende-Button -->
+        <div id="absende-section" style="display:none; margin-top:20px;">
+          <div class="infobox infobox-green" style="margin-bottom:14px;">
+            <div class="infobox-title">🎉 Deine Mahnung ist vollständig und korrekt!</div>
+          </div>
+          <button class="btn btn-success" onclick="sendMahnung()" style="margin-right:10px;">
+            📤 Mahnung absenden
+          </button>
+          <div class="infobox infobox-yellow" style="margin-top:14px;">
+            <div class="infobox-title">💾 PDF speichern</div>
+            Speichere dein Ergebnis nun als PDF. Nutze die Druckfunktion deines Browsers (Strg+P bzw. Cmd+P) und wähle <strong>„Als PDF speichern"</strong> als Drucker.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin-top:20px;">
+    <button class="btn btn-secondary" onclick="showSection('section-basiszins', 3)">← Zurück</button>
+    <button class="btn btn-primary" id="btn-to-print" onclick="showSection('section-print', 5)" style="display:none;">
+      📄 Druckversion öffnen →
+    </button>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================================================
+     SECTION 6: DRUCKVERSION / PDF-PROTOKOLL
+     =================================================== -->
+<div class="section" id="section-print">
+<div class="container">
+
+  <div class="print-tools">
+    <div class="print-tools-title">💾 Druckversion / PDF-Protokoll</div>
+    Die folgenden zwei DIN-A4-Seiten sind für die Schülerdruckversion vorbereitet. Drücke <strong>Strg+P</strong> (Windows) oder <strong>Cmd+P</strong> (Mac) und wähle <strong>„Als PDF speichern“</strong>.
+  </div>
+
+  <!-- SEITE 1: PROTOKOLL -->
+  <section class="print-sheet">
+    <div class="print-head">
+      <div>
+        <div class="print-kicker">Schulz Office GmbH · Wirtschaft/Recht</div>
+        <h2 class="print-title">Protokoll: Zahlungsverzug prüfen</h2>
+      </div>
+      <div class="print-meta">
+        Datum: <strong>10.06.2026</strong><br>
+        Name: ____________________
+      </div>
+    </div>
+
+    <div class="print-block print-block-blue">
+      <h3>1. Unser Fall</h3>
+      <table class="print-table">
+        <tr><td>Verkäufer / Gläubiger</td><td class="print-right">Schulz Office GmbH</td></tr>
+        <tr><td>Käufer / Schuldner</td><td class="print-right">Braun &amp; Partner OHG</td></tr>
+        <tr><td>Rechnung</td><td class="print-right">Nr. SO-2026-0487 vom 30.04.2026</td></tr>
+        <tr><td>Rechnungsbetrag</td><td class="print-right">2.400,00 €</td></tr>
+        <tr><td>Zahlungsziel</td><td class="print-right">15.05.2026</td></tr>
+        <tr><td>Erster Verzugstag</td><td class="print-right">16.05.2026</td></tr>
+        <tr><td>Bearbeitungsdatum</td><td class="print-right">10.06.2026</td></tr>
+      </table>
+    </div>
+
+    <div class="print-block">
+      <h3>2. Wichtigste Punkte aus den Gesetzen</h3>
+      <ul class="print-law-list">
+        <li><strong>§ 286 Abs. 3 BGB:</strong> Bei Entgeltforderungen tritt Verzug spätestens 30 Tage nach Fälligkeit und Zugang der Rechnung ein. Im B2B-Bereich ist dafür keine Mahnung nötig.</li>
+        <li><strong>§ 288 Abs. 2 BGB:</strong> Bei Rechtsgeschäften ohne Verbraucher beträgt der Verzugszinssatz <strong>9 Prozentpunkte über dem Basiszinssatz</strong>.</li>
+        <li><strong>§ 288 Abs. 5 BGB:</strong> Bei Zahlungsverzug im B2B kann zusätzlich eine <strong>40,00-€-Kostenpauschale</strong> verlangt werden.</li>
+      </ul>
+    </div>
+
+    <div class="print-block print-block-yellow">
+      <h3>3. Formel zur Verzugszinsberechnung</h3>
+      <div class="print-formula">Verzugszinsen = Rechnungsbetrag × Verzugszinssatz × Verzugstage ÷ 365</div>
+      <table class="print-table">
+        <tr><td>Basiszinssatz</td><td class="print-right">1,27 %</td></tr>
+        <tr><td>Aufschlag im B2B nach § 288 Abs. 2 BGB</td><td class="print-right">+ 9 Prozentpunkte</td></tr>
+        <tr class="print-total"><td>B2B-Verzugszinssatz</td><td class="print-right">10,27 %</td></tr>
+      </table>
+    </div>
+
+    <div class="print-block print-block-green">
+      <h3>4. Eigene Berechnung der Verzugszinsen</h3>
+      <table class="print-table">
+        <tr><td>Rechnungsbetrag</td><td class="print-right">2.400,00 €</td></tr>
+        <tr><td>Verzugszinssatz</td><td class="print-right">10,27 %</td></tr>
+        <tr><td>Verzugstage vom 16.05.2026 bis 10.06.2026</td><td class="print-right">26 Tage</td></tr>
+        <tr><td>Rechnung</td><td class="print-right">2.400,00 × 0,1027 × 26 ÷ 365</td></tr>
+        <tr class="print-total"><td>Verzugszinsen</td><td class="print-right">17,55 €</td></tr>
+      </table>
+    </div>
+
+    <div class="print-block">
+      <h3>5. Neue Gesamtforderung</h3>
+      <table class="print-table">
+        <tr><td>Offener Rechnungsbetrag</td><td class="print-right">2.400,00 €</td></tr>
+        <tr><td>Verzugszinsen</td><td class="print-right">17,55 €</td></tr>
+        <tr><td>Kostenpauschale nach § 288 Abs. 5 BGB</td><td class="print-right">40,00 €</td></tr>
+        <tr class="print-total"><td>Neue Gesamtforderung</td><td class="print-right">2.457,55 €</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- SEITE 2: MAHNUNG -->
+  <section class="print-sheet">
+    <div class="print-head">
+      <div>
+        <div class="print-kicker">Schulz Office GmbH · Musterlösung</div>
+        <h2 class="print-title">Fertige Mahnung</h2>
+      </div>
+      <div class="print-meta">Seite 2</div>
+    </div>
+
+    <div class="print-letter">
+      <div class="print-letter-sender">Schulz Office GmbH · Musterstraße 10 · 12345 Musterstadt</div>
+
+      <div class="print-letter-recipient">
+        <strong>Braun &amp; Partner OHG</strong><br>
+        z. H. Buchhaltung<br>
+        Geschäftsstraße 5<br>
+        54321 Geschäftsstadt
+      </div>
+
+      <div class="print-letter-date">Musterstadt, 10.06.2026</div>
+
+      <div class="print-letter-subject">
+        Mahnung wegen Zahlungsverzugs<br>
+        Rechnung Nr. SO-2026-0487 vom 30.04.2026
+      </div>
+
+      <p>Sehr geehrte Damen und Herren,</p>
+
+      <p>zu unserer Rechnung Nr. <strong>SO-2026-0487</strong> vom 30.04.2026 über <strong>2.400,00 €</strong> konnten wir bisher keinen Zahlungseingang feststellen.</p>
+
+      <p>Das vereinbarte Zahlungsziel lief am <strong>15.05.2026</strong> ab. Bis heute ist die Zahlung nicht eingegangen. Damit befindet sich die Zahlung gemäß <strong>§ 286 Abs. 3 BGB</strong> seit dem <strong>16.05.2026</strong> im Verzug.</p>
+
+      <p>Wir machen daher folgende Forderung geltend:</p>
+
+      <table class="print-table" style="margin:10px 0 14px 0;">
+        <tr><td>Offener Rechnungsbetrag</td><td class="print-right">2.400,00 €</td></tr>
+        <tr><td>Verzugszinsen nach § 288 Abs. 2 BGB</td><td class="print-right">17,55 €</td></tr>
+        <tr><td>Kostenpauschale nach § 288 Abs. 5 BGB</td><td class="print-right">40,00 €</td></tr>
+        <tr class="print-total"><td>Neue Gesamtforderung</td><td class="print-right">2.457,55 €</td></tr>
+      </table>
+
+      <p>Bitte überweisen Sie den Gesamtbetrag von <strong>2.457,55 €</strong> bis spätestens <strong>20.06.2026</strong> auf unser Konto.</p>
+
+      <p>Bei ausbleibender Zahlung bis zu diesem Datum behalten wir uns vor, weitere rechtliche Schritte einzuleiten.</p>
+
+      <div class="print-signature">
+        <p>Mit freundlichen Grüßen</p>
+        <br><br>
+        <p><strong>Thomas Schulz</strong><br>
+        Geschäftsführer · Schulz Office GmbH</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="showSection('section-mahnung', 4)">← Zurück zur Mahnung</button>
+    <button class="btn btn-primary" onclick="window.print()">🖨️ Als PDF drucken</button>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================================================
+     JAVASCRIPT
+     =================================================== -->
+<script>
+  // ===== KONFIGURATION (leicht anpassbar) =====
+  const CONFIG = {
+    basiszinssatz: 1.27,       // ← Hier anpassen bei neuer Unterrichtseinheit
+    rechnungsbetrag: 2400.00,  // ← Hier anpassen
+    zahlungsziel: '15.05.2026',
+    ersterVerzugstag: '16.05.2026',
+    bearbeitungsdatum: '10.06.2026',
+    verzugstage: 26,           // ← Hier anpassen
+    pauschale: 40.00
+  };
+
+  const vzs = CONFIG.basiszinssatz + 9;
+  const korrZinsen = Math.round(CONFIG.rechnungsbetrag * (vzs/100) * CONFIG.verzugstage / 365 * 100) / 100;
+  const korrGesamt = CONFIG.rechnungsbetrag + korrZinsen + CONFIG.pauschale;
+
+  // Anzeige aktualisieren
+  document.getElementById('display-bzs').textContent =
+    CONFIG.basiszinssatz.toFixed(2).replace('.',',') + ' %';
+
+  // ===== SECTION NAVIGATION =====
+  let currentSection = 'section-start';
+
+  function showSection(id, dotIndex) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    currentSection = id;
+    // Dots
+    document.querySelectorAll('.step-dot').forEach((d, i) => {
+      d.classList.remove('active', 'done');
+      if (i + 1 < dotIndex) d.classList.add('done');
+      else if (i + 1 === dotIndex) d.classList.add('active');
+    });
+    window.scrollTo(0, 0);
+  }
+
+  // ===== FRAGEN =====
+  let correctCount = 0;
+  const totalQ = 6;
+  const answered = {};
+
+  function updateProgress() {
+    const pct = Math.round(correctCount / totalQ * 100);
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-label').textContent =
+      correctCount + ' von ' + totalQ + ' Fragen richtig';
+    if (correctCount >= totalQ) {
+      document.getElementById('unlock-hint').style.display = 'block';
+      document.getElementById('btn-to-basiszins').disabled = false;
+    }
+  }
+
+  function checkMC(qId, correctVal, explanation) {
+    if (answered[qId]) return;
+    const sel = document.querySelector('input[name="' + qId + '"]:checked');
+    if (!sel) { alert('Bitte wähle eine Antwort aus.'); return; }
+    const block = document.getElementById(qId);
+    const fb = document.getElementById(qId + '-fb');
+    // Style alle Labels
+    document.querySelectorAll('input[name="' + qId + '"]').forEach(inp => {
+      const lbl = inp.closest('.option-label');
+      if (inp.value === correctVal) lbl.classList.add('reveal-correct');
+    });
+    const chosen = sel.closest('.option-label');
+    if (sel.value === correctVal) {
+      block.classList.add('correct');
+      chosen.classList.add('selected-correct');
+      fb.textContent = '✅ Richtig! ' + explanation;
+      fb.className = 'q-feedback show ok';
+      correctCount++;
+      answered[qId] = true;
+      // disable all radios
+      document.querySelectorAll('input[name="' + qId + '"]').forEach(i => i.disabled = true);
+    } else {
+      block.classList.add('wrong');
+      chosen.classList.add('selected-wrong');
+      fb.textContent = '❌ Leider falsch. Tipp: ' + explanation;
+      fb.className = 'q-feedback show err';
+      setTimeout(() => {
+        block.classList.remove('wrong');
+        document.querySelectorAll('input[name="' + qId + '"]').forEach(i => {
+          i.checked = false;
+          i.closest('.option-label').classList.remove('selected-wrong', 'reveal-correct');
+        });
+        fb.className = 'q-feedback';
+      }, 2200);
+    }
+    updateProgress();
+  }
+
+  function checkGap(qId, inputId, correctVal, explanation) {
+    if (answered[qId]) return;
+    const inp = document.getElementById(qId + '-input');
+    const fb = document.getElementById(qId + '-fb');
+    const block = document.getElementById(qId);
+    const val = parseFloat(inp.value.replace(',','.'));
+    const corr = parseFloat(correctVal);
+    if (Math.abs(val - corr) < 0.01) {
+      block.classList.add('correct');
+      inp.classList.add('correct');
+      fb.textContent = '✅ ' + explanation;
+      fb.className = 'q-feedback show ok';
+      correctCount++;
+      answered[qId] = true;
+      inp.disabled = true;
+    } else {
+      inp.classList.add('wrong');
+      fb.textContent = '❌ Nicht ganz. Tipp: ' + explanation;
+      fb.className = 'q-feedback show err';
+      setTimeout(() => {
+        inp.classList.remove('wrong');
+        fb.className = 'q-feedback';
+        inp.value = '';
+      }, 2200);
+    }
+    updateProgress();
+  }
+
+  // ===== BERECHNUNG =====
+  let calcDone = { betrag: false, tage: false, zinssatz: false, zinsen: false, pauschale: false, gesamt: false };
+  let wrongCounts = { betrag: 0, tage: 0, zinssatz: 0, zinsen: 0, gesamt: 0 };
+
+  function showFb(id, correct, msg, hintId) {
+    const fb = document.getElementById('fb-' + id);
+    const inp = document.getElementById('inp-' + id);
+    if (!inp || calcDone[id]) return;
+    const val = parseFloat(inp.value.replace(',','.'));
+    if (correct(val)) {
+      fb.textContent = '✅ Richtig!';
+      fb.className = 'q-feedback show ok';
+      inp.classList.remove('wrong');
+      inp.classList.add('correct');
+      inp.disabled = true;
+      calcDone[id] = true;
+      checkCalcComplete();
+    } else {
+      wrongCounts[id] = (wrongCounts[id]||0) + 1;
+      fb.textContent = '❌ ' + msg;
+      fb.className = 'q-feedback show err';
+      inp.classList.add('wrong');
+      inp.classList.remove('correct');
+      if (wrongCounts[id] >= 2 && hintId) {
+        document.getElementById(hintId).classList.add('show');
+      }
+    }
+  }
+
+  function checkBetrag() {
+    showFb('betrag', v => Math.abs(v - CONFIG.rechnungsbetrag) < 0.5,
+      'Schau auf die Rechnung SO-2026-0487 und trage den offenen Rechnungsbetrag ein.', 'hint-betrag');
+  }
+  function checkTage() {
+    showFb('tage', v => Math.abs(v - CONFIG.verzugstage) < 0.5,
+      'Zähle ab dem Tag nach Ablauf des Zahlungsziels bis einschließlich Bearbeitungsdatum.', 'hint-tage');
+  }
+  function checkZinssatz() {
+    showFb('zinssatz', v => Math.abs(v - vzs) < 0.05,
+      'Addiere den Basiszinssatz und 9 Prozentpunkte.', 'hint-zinssatz');
+  }
+  function checkZinsen() {
+    showFb('zinsen', v => Math.abs(v - korrZinsen) < 0.02,
+      'Nutze die Formel: Rechnungsbetrag × Verzugszinssatz × Verzugstage ÷ 365. Runde auf zwei Nachkommastellen.', 'hint-zinsen');
+  }
+  function checkGesamt() {
+    showFb('gesamt', v => Math.abs(v - korrGesamt) < 0.02,
+      'Addiere Rechnungsbetrag, Verzugszinsen und 40-Euro-Kostenpauschale.', 'hint-gesamt');
+  }
+
+  function checkPauschale() {
+    if (calcDone['pauschale']) return;
+    const sel = document.querySelector('input[name="pauschale"]:checked');
+    if (!sel) { alert('Bitte wähle eine Antwort aus.'); return; }
+    const fb = document.getElementById('fb-pauschale');
+    if (sel.value === '40') {
+      fb.textContent = '✅ Richtig! § 288 Abs. 5 BGB: 40,00 € Kostenpauschale.';
+      fb.className = 'q-feedback show ok';
+      calcDone['pauschale'] = true;
+      document.querySelectorAll('input[name="pauschale"]').forEach(i => i.disabled = true);
+      checkCalcComplete();
+    } else {
+      fb.textContent = '❌ Leider falsch. Tipp: Lies noch einmal § 288 Abs. 5 BGB.';
+      fb.className = 'q-feedback show err';
+      setTimeout(() => {
+        document.querySelectorAll('input[name="pauschale"]').forEach(i => i.checked = false);
+        fb.className = 'q-feedback';
+      }, 2200);
+    }
+  }
+
+  function checkCalcComplete() {
+    const allDone = Object.values(calcDone).every(v => v);
+    if (allDone) {
+      document.getElementById('summary-section').style.display = 'block';
+      document.getElementById('btn-to-mahnung').disabled = false;
+      document.getElementById('summary-section').scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+  }
+
+  // ===== BETREFF =====
+  let betreffOk = false;
+  function checkBetreff() {
+    const v = document.getElementById('betreff-input').value.toLowerCase();
+    const fb = document.getElementById('betreff-fb');
+    if (v.includes('mahnung') || v.includes('zahlungsverzug') || v.includes('so-2026')) {
+      fb.textContent = '✅ Guter Betreff!';
+      fb.style.display = 'block'; fb.style.color = '#2e7d32';
+      betreffOk = true;
+    } else if (v.length > 5) {
+      fb.textContent = '💡 Tipp: Der Betreff sollte das Wort „Mahnung" und/oder die Rechnungsnummer enthalten.';
+      fb.style.display = 'block'; fb.style.color = '#7a5800';
+    } else {
+      fb.style.display = 'none';
+    }
+  }
+
+  // ===== MAHNUNG SLOTS =====
+  const correctSlots = { 1:'correct',2:'correct',3:'correct',4:'correct',5:'correct',6:'correct',7:'correct',8:'correct' };
+  const slotDone = {};
+  const slotFeedback = {
+    1: { ok: '✅ Korrekte Anrede für ein Geschäftsschreiben.', err: '❌ Diese Anrede ist nicht geschäftlich angemessen. Nutze „Sehr geehrte Damen und Herren,".' },
+    2: { ok: '✅ Korrekter Bezug zur offenen Rechnung.', err: '❌ Dieser Baustein passt nicht. Es geht um eine ausgebliebene Zahlung, nicht um Mängel.' },
+    3: { ok: '✅ Richtig – das Zahlungsziel ist klar benannt.', err: '❌ Dieser Baustein passt nicht. Nenne das abgelaufene Zahlungsziel.' },
+    4: { ok: '✅ Korrekte rechtliche Einordnung (§ 286 Abs. 3 BGB).', err: '❌ Nicht geeignet. Eine sachliche Mahnung nennt den rechtlichen Verzug ohne Drohung.' },
+    5: { ok: '✅ Neue Gesamtforderung vollständig und korrekt aufgeführt.', err: '❌ Dieser Baustein ist falsch. Nenne Rechnungsbetrag, Zinsen und Pauschale aufgeschlüsselt.' },
+    6: { ok: '✅ Klare und angemessene Zahlungsfrist.', err: '❌ Die Zahlungsfrist muss konkret und realistisch sein.' },
+    7: { ok: '✅ Sachlicher Hinweis auf mögliche weitere Schritte – nicht aggressiv.', err: '❌ Zu aggressiv oder nicht sachlich. Behalte einen professionellen Ton.' },
+    8: { ok: '✅ Korrekte Grußformel.', err: '❌ Für Geschäftsbriefe ist „Mit freundlichen Grüßen" die richtige Formel.' }
+  };
+
+  function checkSlot(n) {
+    if (slotDone[n]) return;
+    const sel = document.getElementById('slot' + n);
+    const fb = document.getElementById('sfb' + n);
+    const val = sel.value;
+    if (!val) { fb.className = 'slot-feedback'; return; }
+    if (val === 'correct') {
+      sel.classList.add('correct'); sel.classList.remove('wrong');
+      fb.textContent = slotFeedback[n].ok;
+      fb.className = 'slot-feedback show ok';
+      slotDone[n] = true;
+      sel.disabled = true;
+    } else {
+      sel.classList.add('wrong'); sel.classList.remove('correct');
+      fb.textContent = slotFeedback[n].err;
+      fb.className = 'slot-feedback show err';
+      setTimeout(() => {
+        sel.classList.remove('wrong');
+        sel.value = '';
+        fb.className = 'slot-feedback';
+      }, 2500);
+    }
+    checkMahnungComplete();
+  }
+
+  function checkMahnungComplete() {
+    const allSlotsDone = Object.keys(slotDone).length === 8 && Object.values(slotDone).every(v => v);
+    if (allSlotsDone) {
+      document.getElementById('absende-section').style.display = 'block';
+      document.getElementById('btn-to-print').style.display = 'inline-flex';
+      document.getElementById('absende-section').scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+  }
+
+  function sendMahnung() {
+    const banner = document.createElement('div');
+    banner.className = 'success-banner show';
+    banner.innerHTML = '<h3>📤 Mahnung erfolgreich abgesendet!</h3><p>Deine Mahnung wurde an die Braun &amp; Partner OHG übermittelt. Vergiss nicht, das Ergebnis als PDF zu speichern!</p>';
+    document.getElementById('absende-section').after(banner);
+    document.getElementById('btn-to-print').scrollIntoView({behavior:'smooth'});
+  }
+</script>
+
+</body>
+</html>
